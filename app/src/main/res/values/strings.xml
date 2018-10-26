@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">SpaytConsumer</string>
+    <string name="hint_fname">VORNAME</string>
+    <string name="hint_name">NAME</string>
+    <string name="hint_email">EMAIL</string>
+    <string name="hint_password">PASSWORT</string>
+    <string name="hint_Confirm_password">BESTATIGE PASSWORT</string>
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="err_msg_fname">Please enter First name</string>
+    <string name="err_msg_lname">Please enter Last name</string>
+    <string name="err_msg_email_null">Please email address</string>
+    <string name="err_msg_email">Please valid email address</string>
+    <string name="err_msg_password">Please enter  password</string>
+    <string name="err_msg_confirm_password">Please enter confirm password</string>
+    <string name="err_msg_different_password">Password and Confirm password should be same</string>
+    <string name="facebook_app_id">2009635299131248</string>
+    <string name="fb_login_protocol_scheme">fb2009635299131248</string>
+
+</resources>
