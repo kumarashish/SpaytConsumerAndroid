@@ -17,7 +17,7 @@ public class AppController extends Application {
     Validation validation;
     UserProfile profile;
     PrefManager prefManager;
-    String address;
+    String address="";
     LatLng currentLocation;
     @Override
     public void onCreate() {

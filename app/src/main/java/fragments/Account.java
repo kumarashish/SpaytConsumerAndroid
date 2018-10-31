@@ -17,7 +17,7 @@ public class Account extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.under_development,
+        View view = inflater.inflate(R.layout.profile,
                 container, false);
 
 

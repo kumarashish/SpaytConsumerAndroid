@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
             <TextView
-                android:id="@+id/parkingplace"
+                android:id="@+id/category"
                 android:layout_marginTop="10dp"
                 android:text=""
                 android:textSize="12dp"

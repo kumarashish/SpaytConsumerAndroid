@@ -241,10 +241,7 @@ public class LocationSearch extends FragmentActivity implements View.OnClickList
         Log.e(TAG, "Google Places API connection failed with error code: "
                 + connectionResult.getErrorCode());
 
-        Toast.makeText(this,
-                "Google Places API connection failed with error code:" +
-                        connectionResult.getErrorCode(),
-                Toast.LENGTH_LONG).show();
+
 
     }
 }

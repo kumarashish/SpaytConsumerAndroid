@@ -12,10 +12,31 @@ public class Common {
     public static String login=baseUrl+"consumers/login";
     public static String forgetPassword=baseUrl+"user/forgot_password";
     public static String logout=baseUrl+"consumers/logout";
-    public static String getCategories=baseUrl+"consumers/get_categories";
+    public static String getCategories=baseUrl+"user/get_categories";
     public static String locationOffers=baseUrl+"consumers/business_location_offers";
     public static String getLocationByDistance=baseUrl+"user/distance_by_km";
 
+
+
+
+ //   http://api.spayt.de/user/distance_by_km?latitude=17.457710&longitude=78.3986282&distance=100
+    //        URL =  http://api.spayt.de/user/getPaymentAfterKillProcess
+  //  Request Json {
+        //"user_id" = 69;
+   // }
+    //    business_locations_by_city
+//    #define kCategories @"get_categories"
+//            #define kUpdateProfile @"update_prinfo"
+//            #define kLocations @"distance_by_km"
+//            #define kLocationDetails @"location_details"
+//            #define kRecentlyViewed @"business_location_recently_viewed"
+//            #define kSaveViewed @"business_location_recently_veiw_saved"
+//            #define kOffers @"business_location_offers"
+//            #define kOrder @"consumers_orders"
+//            #define kTIMER @"AfterTimerStart"
+//            #define kUSERPARKING @"getUserParkingCar"
+//            #define kISTIMERSTART @"getPaymentAfterKillProcess"
+//            #define kInvoiceList @"get_invoices"
     public static String getRegisterUrl( String fname, String lname, String email, String password)
     {
         return  register+"email="+email+"&password="+password+"&first_name="+fname+"&last_name="+lname;

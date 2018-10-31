@@ -169,16 +169,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
             if( progressDialog!=null) {
                 progressDialog.cancel();
             }
-//            if (mAutocompleteTextView != null) {
-//                mAutocompleteTextView.setText(address);
-//                progressbar.setVisibility(View.GONE);
-//            }else if (progressDialog != null){
-//                progressDialog.cancel();
-//                yourLocation.setText(  controller.getAddress());
-//                distance.setText("("+radiusDistance+" km )");
-//                updateScreen();
-//
-//            }
+
 
 
         }

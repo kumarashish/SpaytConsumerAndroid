@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.spaytconsumer.R;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -127,5 +128,15 @@ public class Utils {
         return strAdd;
 
     }
-
+public static JSONArray getJSonArray(String value)
+{
+    try{
+        JSONArray jsonArray=new JSONArray(value);
+        return jsonArray;
+    }catch (Exception ex)
+    {
+        ex.fillInStackTrace();
+    }
+    return null;
+}
 }
