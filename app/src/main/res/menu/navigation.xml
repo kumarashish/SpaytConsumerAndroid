@@ -8,16 +8,22 @@
         android:title="" />
 
     <item
-        android:id="@+id/navigation_wallet"
-        android:icon="@drawable/icon2"
+        android:id="@+id/navigation_offers"
+        android:icon="@drawable/icon3"
+
+        android:title="" />
+    <item
+        android:id="@+id/navigation_around_me"
+        android:icon="@drawable/around_me"
+
         android:title="" />
 
     <item
-        android:id="@+id/navigation_booking"
-        android:icon="@drawable/icon3"
+        android:id="@+id/navigation_Loyality"
+        android:icon="@drawable/icon2"
         android:title="" />
     <item
-        android:id="@+id/navigation_mygame"
+        android:id="@+id/navigation_account"
         android:icon="@drawable/icon4"
         android:title="" />
 

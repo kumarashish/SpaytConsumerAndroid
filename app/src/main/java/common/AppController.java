@@ -2,6 +2,8 @@ package common;
 
 import android.app.Application;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import models.UserProfile;
 import network.WebApiCall;
 import utils.Validation;
@@ -15,6 +17,8 @@ public class AppController extends Application {
     Validation validation;
     UserProfile profile;
     PrefManager prefManager;
+    String address;
+    LatLng currentLocation;
     @Override
     public void onCreate() {
 
@@ -39,5 +43,29 @@ public class AppController extends Application {
 
     public WebApiCall getApiCall() {
         return apiCall;
+    }
+
+    public void setAddress(String address, LatLng loc) {
+        this.address = address;
+        this.currentLocation=loc;
+    }
+    public void setCurrentAddress(String address) {
+        this.address = address;
+
+    }
+
+    public void setLocation(LatLng loc) {
+        double latitude = loc.latitude;
+        double longitude = loc.longitude;
+        currentLocation = loc;
+    }
+
+
+    public LatLng getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public String getAddress() {
+        return address;
     }
 }

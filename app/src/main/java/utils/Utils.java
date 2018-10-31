@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
@@ -17,6 +19,10 @@ import android.widget.Toast;
 import com.spaytconsumer.R;
 
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import prelogin.Login;
 
@@ -98,6 +104,27 @@ public class Utils {
             }
 
         });
+
+    }
+    public static String getCompleteAddressString(final Activity act, final double LATITUDE, final double LONGITUDE) {
+        List<Address> list;
+        String strAdd=null;
+        Geocoder geocoder = new Geocoder(act, Locale.getDefault());
+        try {
+            list = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            for (int n = 0; n <= list.get(0).getMaxAddressLineIndex()-2; n++) {
+                strAdd +=   list.get(0).getAddressLine(n) + ", ";
+            }
+
+            strAdd = list.get(0).getLocality();
+            if(strAdd.length()>22)
+            {
+                strAdd= strAdd.substring(0,22);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return strAdd;
 
     }
 
