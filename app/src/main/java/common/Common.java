@@ -15,6 +15,8 @@ public class Common {
     public static String getCategories=baseUrl+"user/get_categories";
     public static String locationOffers=baseUrl+"consumers/business_location_offers";
     public static String getLocationByDistance=baseUrl+"user/distance_by_km";
+    public static String updateProfile=baseUrl+"user/update_prinfo";
+    public static String googleMapsApiKey="AIzaSyARyIWs_8t0_hIrTPGqMsOPboaEa5T25Qs";
 
 
 
@@ -26,7 +28,7 @@ public class Common {
    // }
     //    business_locations_by_city
 //    #define kCategories @"get_categories"
-//            #define kUpdateProfile @"update_prinfo"
+//            #define kUpdateProfile @""
 //            #define kLocations @"distance_by_km"
 //            #define kLocationDetails @"location_details"
 //            #define kRecentlyViewed @"business_location_recently_viewed"
