@@ -139,4 +139,16 @@ public static JSONArray getJSonArray(String value)
     }
     return null;
 }
+    public static JSONArray getLocationsArray(String value)
+    {
+        try{
+            JSONObject jsonObject=new JSONObject(value);
+            JSONArray jsonArray=jsonObject.getJSONArray("locations");
+            return jsonArray;
+        }catch (Exception ex)
+        {
+            ex.fillInStackTrace();
+        }
+        return null;
+    }
 }

@@ -193,9 +193,7 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
            startActivity(new Intent(this, DashBoard.class));
            finish();
         } else {
-
                 utils.Utils.showToast(this, utils.Utils.getMessage(value));
-
         }
         if(dialog!=null)
         {

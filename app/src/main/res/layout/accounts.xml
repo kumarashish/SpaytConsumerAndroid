@@ -364,6 +364,7 @@
             android:layout_height="match_parent" />
         <EditText
             android:id="@+id/fname"
+
             android:padding="10dp"
             android:singleLine="true"
             android:textCursorDrawable="@drawable/black_cursor"

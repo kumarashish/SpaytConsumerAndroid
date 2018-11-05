@@ -14,14 +14,15 @@ public class Common {
     public static String logout=baseUrl+"consumers/logout";
     public static String getCategories=baseUrl+"user/get_categories";
     public static String locationOffers=baseUrl+"consumers/business_location_offers";
-    public static String getLocationByDistance=baseUrl+"user/distance_by_km";
+    public static String getLocationByDistance=baseUrl+"user/distance_by_km?";
     public static String updateProfile=baseUrl+"user/update_prinfo";
     public static String googleMapsApiKey="AIzaSyARyIWs_8t0_hIrTPGqMsOPboaEa5T25Qs";
+    public static String isTimerStartedUrl="http://api.spayt.de/user/getPaymentAfterKillProcess";
 
 
 
 
- //   http://api.spayt.de/user/distance_by_km?latitude=17.457710&longitude=78.3986282&distance=100
+
     //        URL =  http://api.spayt.de/user/getPaymentAfterKillProcess
   //  Request Json {
         //"user_id" = 69;
@@ -43,7 +44,10 @@ public class Common {
     {
         return  register+"email="+email+"&password="+password+"&first_name="+fname+"&last_name="+lname;
     }
-
+public static String getGetLocationByDistance(Double lat,Double lon,int distance)
+{
+    return   getLocationByDistance+"latitude="+lat+"&longitude="+lon+"&distance="+distance;
+}
 
     // login with fb
   //  @"fb_id" :strSocial_id, @"email" :strEmail,@"username":strUserName,@"device_id":device_id,@"access_token":token_id

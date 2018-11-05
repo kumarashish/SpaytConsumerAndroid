@@ -249,10 +249,10 @@ public class WebApiCall {
             }
         });
     }
-    public void postData(String url, String json, String token,final WebApiResponseCallback callback) {
+    public void postData(String url, String json,final WebApiResponseCallback callback) {
         client.newBuilder().connectTimeout(60000, TimeUnit.MILLISECONDS).readTimeout(60000, TimeUnit.MILLISECONDS).build();
         RequestBody reqBody = RequestBody.create(JSON, json);
-        Request request = new Request.Builder().header("Token", token).url(url).post(reqBody).build();
+        Request request = new Request.Builder().url(url).post(reqBody).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -274,7 +274,25 @@ public class WebApiCall {
             }
         });
     }
+    public String postData(String url, String json) {
+        client.newBuilder().connectTimeout(60000, TimeUnit.MILLISECONDS).readTimeout(60000, TimeUnit.MILLISECONDS).build();
+        RequestBody reqBody = RequestBody.create(JSON, json);
+        Request request = new Request.Builder().url(url).post(reqBody).build();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.code() == 200) {
+                return response.body().string();
 
+            } else {
+                return getErrorData();
+            }
+
+        } catch (Exception ex) {
+            ex.fillInStackTrace();
+            return getErrorData();
+        }
+
+    }
 
     }
 

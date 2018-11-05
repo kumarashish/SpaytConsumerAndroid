@@ -43,9 +43,12 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import common.AppController;
+import common.Common;
 import fragments.Account;
 import fragments.Aroundme;
 import fragments.Home;
@@ -73,6 +76,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
     Fragment currentFragment;
     final int permission = 2;
     private LocationManager mlocManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,18 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
         ButterKnife.bind(this);
         controller = (AppController) getApplicationContext();
         frameLayout=(FrameLayout)content.findViewById(R.id.frame) ;
+        Thread t=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(Utils.isNetworkAvailable(DashBoard.this))
+                {
+                String response= controller.getApiCall().postData(Common.isTimerStartedUrl,timmerStartedRequest().toString());
+                Log.d("response",response);
+                }
+
+            }
+        });
+        t.start();
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
         for (int i = 0; i < menuView.getChildCount(); i++) {
@@ -91,15 +107,9 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
             final ViewGroup.LayoutParams layoutParams = iconView.getLayoutParams();
             final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
             // set your height here
-            if (i != 2) {
                 layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, displayMetrics);
                 // set your width here
                 layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, displayMetrics);
-            } else {
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, displayMetrics);
-                // set your width here
-                layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, displayMetrics);
-            }
             iconView.setLayoutParams(layoutParams);
         }
         loadfragment(1);
@@ -126,7 +136,17 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
     }
-
+public JSONObject timmerStartedRequest()
+{
+    JSONObject jsonObject=new JSONObject();
+    try{
+        jsonObject.put("user_id",controller.getProfile().getUser_id());
+    }catch (Exception ex)
+    {
+        ex.fillInStackTrace();
+    }
+    return jsonObject;
+}
     protected void stopLocationUpdates() {
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, (LocationListener) DashBoard.this);
@@ -164,6 +184,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
             String address = utils.Utils.getCompleteAddressString(DashBoard.this, location.getLatitude(), location.getLongitude());
             LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
             controller.setAddress(address, loc);
+            controller.setAroundME(loc);
             stopLocationUpdates();
             updateScreen();
             if( progressDialog!=null) {

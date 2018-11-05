@@ -1,11 +1,15 @@
 package fragments;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,31 +17,51 @@ import android.widget.ViewSwitcher;
 
 import com.spaytconsumer.R;
 
+import org.json.JSONObject;
+
 import java.util.Calendar;
+
+import common.AppController;
+import common.Common;
+import intefaces.WebApiResponseCallback;
+import models.UserProfile;
+import utils.Utils;
 
 /**
  * Created by ashish.kumar on 30-10-2018.
  */
 
-public class Account extends Fragment implements View.OnClickListener{
+public class Account extends Fragment implements View.OnClickListener , WebApiResponseCallback{
     LinearLayout view1;
     LinearLayout view2;
     LinearLayout view3;
     View personalInfo,ruchnungen;
     Button back,back2;
+    EditText fname;
+    EditText lname;
     TextView jan,feb,march,april,may,june,july,august,sep,oct,nov,dec;
     HorizontalScrollView scrollView;
-
+AppController controller;
+Dialog dialog;
+int apiCall=0;
+int updateProfile=1,getInvoice=2;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.accounts,
                 container, false);
+        controller=(AppController)getActivity().getApplicationContext();
         personalInfo=(View)view.findViewById(R.id.personalInfo);
         ruchnungen=(View)view.findViewById(R.id.ruchnungen);
         view1=(LinearLayout)view.findViewById(R.id.view1);
         view2=(LinearLayout)view.findViewById(R.id.view2);
         view3=(LinearLayout)view.findViewById(R.id.view3);
+        fname=(EditText)view.findViewById(R.id.fname);
+        lname=(EditText)view.findViewById(R.id.lname);
+        fname.setText(controller.getProfile().getFirst_name());
+        lname.setText(controller.getProfile().getLast_name());
+        fname.setSelection(controller.getProfile().getFirst_name().length());
+        lname.setSelection(controller.getProfile().getLast_name().length());
         jan=(TextView)view.findViewById(R.id.jan);
         feb=(TextView)view.findViewById(R.id.feb);
         march=(TextView)view.findViewById(R.id.mar);
@@ -70,9 +94,44 @@ public class Account extends Fragment implements View.OnClickListener{
         oct.setOnClickListener(this);
         nov.setOnClickListener(this);
         dec.setOnClickListener(this);
+        lname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                   if((fname.getText().length()>0)&&(lname.getText().length()>0))
+                    {
+                        if(Utils.isNetworkAvailable(getActivity()))
+                        {
+                            dialog=Utils.showPogress(getActivity());
+                            controller.getApiCall().postData(Common.updateProfile,upDateProfileJSON().toString(),Account.this);
+                        }
+                    }else {
+                       if(fname.getText().length()==0)
+                       {
+                           Utils.showToast(getActivity(),"Please enter first name");
+                       }else{
+                           Utils.showToast(getActivity(),"Please enter last name");
+                       }
+                   }
+                }
+                return false;
+            }
+        });
         return view;
     }
 
+    public JSONObject upDateProfileJSON() {
+        JSONObject jsonObject = new JSONObject();
+        {
+            try {
+                jsonObject.put("id", controller.getProfile().getUser_id());
+                jsonObject.put("first_name", controller.getProfile().getFirst_name());
+                jsonObject.put("last_name", controller.getProfile().getLast_name());
+            } catch (Exception ex) {
+                ex.fillInStackTrace();
+            }
+        }
+        return jsonObject;
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId())
@@ -318,5 +377,29 @@ public class Account extends Fragment implements View.OnClickListener{
             break;
     }
 
+    }
+
+    @Override
+    public void onSucess(String value) {
+        if(   utils.Utils.getStatus(value)) {
+            UserProfile profile=controller.getProfile();
+            profile.setFirst_name(fname.getText().toString());
+            profile.setLast_name(lname.getText().toString());
+            controller.setProfile(profile);
+        }
+        utils.Utils.showToast(getActivity(), utils.Utils.getMessage(value));
+        if(dialog!=null)
+        {
+            dialog.cancel();
+        }
+    }
+
+    @Override
+    public void onError(String value) {
+        utils.Utils.showToast(getActivity(), utils.Utils.getMessage(value));
+        if(dialog!=null)
+        {
+            dialog.cancel();
+        }
     }
 }
