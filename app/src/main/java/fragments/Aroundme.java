@@ -2,15 +2,19 @@ package fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.spaytconsumer.R;
 
@@ -31,9 +36,8 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import common.AppController;
 import common.Common;
-import common.LocationSearch;
+import common.MarkerInfoWindowAdapter;
 import intefaces.WebApiResponseCallback;
-import models.CategoryModel;
 import models.ParkingModel;
 import utils.Utils;
 
@@ -47,14 +51,19 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
     AppController controller;
 
     Dialog progressDailog;
-
+   int selectedView=1;
 
     GoogleMap gmap_view;
     private MapView map_view;
     Bundle savedInstanceState;
     int apiCall = 0;
     int getCategory = 1, getNearBYLocation = 2;
-    ArrayList<ParkingModel> pakingLocationList = new ArrayList<>();
+    public static ArrayList<ParkingModel> pakingLocationList = new ArrayList<>();
+    int range=10;
+    Spinner rangeSelector;
+    int []rangeArray={10,20,30,40,50,60,70,80,90,100};
+    ImageView viewSwitchIcon;
+    ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +73,9 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
         ButterKnife.bind(getActivity());
         controller = (AppController) getActivity().getApplicationContext();
         map_view = (MapView) view.findViewById(R.id.map_view);
+        rangeSelector=(Spinner) view.findViewById(R.id.range);
+        viewSwitchIcon=(ImageView)view.findViewById(R.id.viewSwitchIcon);
+        listView=(ListView) view.findViewById(R.id.listView);
 
 
         Bundle mapViewBundle = null;
@@ -72,17 +84,36 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
         }
         map_view.onCreate(mapViewBundle);
         map_view.getMapAsync(this);
+        viewSwitchIcon.setOnClickListener(this);
+        getData();
+        rangeSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(range!=rangeArray[i])
+                {
+                    range=rangeArray[i];
+                    getData();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        return view;
+    }
+
+    public void getData()
+    {
         if (Utils.isNetworkAvailable(getActivity())) {
             apiCall = getNearBYLocation;
             progressDailog = Utils.showPogress(getActivity());
             //  controller.getApiCall().getData(Common.getGetLocationByDistance(controller.getAroundMe().latitude,controller.getAroundMe().longitude,10),Aroundme.this);
-            controller.getApiCall().getData("https://api.spayt.de/user/distance_by_km?latitude=52.520006599999995&longitude=13.404954&distance=10",Aroundme.this);
+            controller.getApiCall().getData("https://api.spayt.de/user/distance_by_km?latitude=52.520006599999995&longitude=13.404954&distance="+range,Aroundme.this);
 
         }
-
-        return view;
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -152,20 +183,32 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
                 gmap_view.clear();
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 for (int i = 0; i < pakingLocationList.size(); i++) {
-                    ParkingModel model = pakingLocationList.get(i);
+                    final ParkingModel model = pakingLocationList.get(i);
                     MarkerOptions markerOptions = new MarkerOptions();
 
                     // Setting position for the marker
                     markerOptions.position(new LatLng(Double.parseDouble(model.getLatitude()), Double.parseDouble(model.getLongitude())));
 
+                    int height = 100;
+                    int width = 100;
+                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.parking);
+                    Bitmap b=bitmapdraw.getBitmap();
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
                     // Setting custom icon for the marker
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.parking));
-
+                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                     // Setting title for the infowindow
                     markerOptions.title(model.getLocation_name());
+
+
                     builder.include(markerOptions.getPosition());
+
                     // Adding the marker to the map
-                    gmap_view.addMarker(markerOptions);
+
+                            Marker marker= gmap_view.addMarker(markerOptions);
+                            marker.setTag(i);
+                    MarkerInfoWindowAdapter markerInfoWindowAdapter = new MarkerInfoWindowAdapter(getActivity());
+                    gmap_view.setInfoWindowAdapter(markerInfoWindowAdapter);
+
                 }
                 if (pakingLocationList.size() > 1) {
                     try {
@@ -193,6 +236,20 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.viewSwitchIcon:
+                if(selectedView==1)
+                {
+                    selectedView=2;
+                    viewSwitchIcon.setImageResource(R.drawable.map_icon);
+                    map_view.setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
+                }else {
+                    selectedView=1;
+                    viewSwitchIcon.setImageResource(R.drawable.listview_icon);
+                    map_view.setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.GONE);
+                }
+                break;
 
         }
     }
@@ -212,6 +269,12 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
                 }
             }
             if (pakingLocationList.size() > 0) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listView.setAdapter(new adapter.ListAdapter(getActivity(),pakingLocationList));
+                    }
+                });
                 addMarkers();
             }
         } else {

@@ -59,6 +59,45 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
         </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+        <LinearLayout
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp">
+            <TextView
+
+                android:layout_marginRight="-5dp"
+                android:textColor="@android:color/black"
+                android:text="UMKREIS BIS"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Spinner
+
+                android:id="@+id/range"
+                android:entries="@array/rangearray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+            <ImageView
+                android:id="@+id/viewSwitchIcon"
+                android:src="@drawable/listview_icon"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            </RelativeLayout>
+
+
         <com.google.android.gms.maps.MapView
             android:id="@+id/map_view"
             android:layout_width="match_parent"
@@ -67,6 +106,6 @@
             android:visibility="gone"
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
