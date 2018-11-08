@@ -17,7 +17,9 @@ public class Common {
     public static String getLocationByDistance=baseUrl+"user/distance_by_km?";
     public static String updateProfile=baseUrl+"user/update_prinfo";
     public static String googleMapsApiKey="AIzaSyARyIWs_8t0_hIrTPGqMsOPboaEa5T25Qs";
-    public static String isTimerStartedUrl="http://api.spayt.de/user/getPaymentAfterKillProcess";
+    public static String isTimerStartedUrl=baseUrl+"user/getPaymentAfterKillProcess";
+    public static String getRecentView=baseUrl+"user/business_location_recently_viewed";
+
 
 
 

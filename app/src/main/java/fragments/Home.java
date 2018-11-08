@@ -3,14 +3,19 @@ package fragments;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -21,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.spaytconsumer.R;
 
@@ -35,6 +41,7 @@ import butterknife.ButterKnife;
 import common.AppController;
 import common.Common;
 import common.LocationSearch;
+import common.MarkerInfoWindowAdapter;
 import intefaces.WebApiResponseCallback;
 import models.CategoryModel;
 import models.ParkingModel;
@@ -58,9 +65,19 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
     Bundle savedInstanceState;
     int apiCall=0;
     int getCategory=1,getNearBYLocation=2;
+            final int getRecetView=3;
     Button back;
     ImageView location_icon;
     ArrayList<ParkingModel> pakingLocationList=new ArrayList<>();
+    ListView listView;
+    Button aroudnMe,recentView;
+    LinearLayout range_llt;
+    TextView heading;
+    Spinner rangeSelector;
+    int []rangeArray={10,20,30,40,50,60,70,80,90,100};
+    ImageView viewSwitchIcon;
+    int range=10;
+    int selectedView=1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,6 +93,15 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
         view2=(LinearLayout)view.findViewById(R.id.view2);
         back=(Button) view.findViewById(R.id.back);
         map_view=(MapView)view.findViewById(R.id.map_view);
+        listView=(ListView) view.findViewById(R.id.listView);
+        aroudnMe=(Button)view.findViewById(R.id.aroundme);
+        recentView=(Button)view.findViewById(R.id.recentView);
+        range_llt=(LinearLayout)view.findViewById(R.id.range_llt);
+        heading=(TextView)view.findViewById(R.id.heading);
+        rangeSelector=(Spinner) view.findViewById(R.id.range);
+        viewSwitchIcon=(ImageView)view.findViewById(R.id.viewSwitchIcon);
+        aroudnMe.setOnClickListener(this);
+        recentView.setOnClickListener(this);
         if(controller.getAddress().length()>0) {
             city.setText(controller.getAddress());
             getBusinessLocations();
@@ -84,6 +110,7 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
         city.setOnClickListener(this);
         location_icon.setOnClickListener(this);
         category.setOnClickListener(this);
+        viewSwitchIcon.setOnClickListener(this);
         back.setOnClickListener(this);
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -91,6 +118,21 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
         }
         map_view.onCreate(mapViewBundle);
         map_view.getMapAsync(this);
+        rangeSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(range!=rangeArray[i])
+                {
+                    range=rangeArray[i];
+                    getData();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         return view;
     }
 
@@ -166,52 +208,70 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
                 public void run() {
                     view1.setVisibility(View.GONE);
                     view2.setVisibility(View.VISIBLE);
-
+                    listView.setAdapter(new adapter.ListAdapter(getActivity(), pakingLocationList));
                     addMarkers();
                 }
             });
 
         }
 
+
     public void addMarkers() {
-        LatLngBounds bounds;
-        gmap_view.clear();
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (int i = 0; i < pakingLocationList.size(); i++) {
-            ParkingModel model = pakingLocationList.get(i);
-            MarkerOptions markerOptions = new MarkerOptions();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LatLngBounds bounds;
+                gmap_view.clear();
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (int i = 0; i < pakingLocationList.size(); i++) {
+                    final ParkingModel model = pakingLocationList.get(i);
+                    MarkerOptions markerOptions = new MarkerOptions();
 
-            // Setting position for the marker
-            markerOptions.position(new LatLng(Double.parseDouble(model.getLatitude()), Double.parseDouble(model.getLongitude())));
+                    // Setting position for the marker
+                    markerOptions.position(new LatLng(Double.parseDouble(model.getLatitude()), Double.parseDouble(model.getLongitude())));
 
-            // Setting custom icon for the marker
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.parking));
+                    int height = 100;
+                    int width = 100;
+                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.parking);
+                    Bitmap b=bitmapdraw.getBitmap();
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                    // Setting custom icon for the marker
+                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                    // Setting title for the infowindow
+                    markerOptions.title(model.getLocation_name());
 
-            // Setting title for the infowindow
-            markerOptions.title(model.getLocation_name());
-            builder.include(markerOptions.getPosition());
-            // Adding the marker to the map
-            gmap_view.addMarker(markerOptions);
-        }
-        if (pakingLocationList.size() > 1) {
-            try {
-                int width = getResources().getDisplayMetrics().widthPixels;
-                int height = map_view.getHeight();
-                int padding = (int) (width * 0.12);
-                gmap_view.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, padding));
-                //  gmap_view.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 15));
-            } catch (Exception ex) {
-                ex.fillInStackTrace();
-                Log.d("error", ex.fillInStackTrace().toString());
+
+                    builder.include(markerOptions.getPosition());
+
+                    // Adding the marker to the map
+
+                    Marker marker= gmap_view.addMarker(markerOptions);
+                    marker.setTag(i);
+                    MarkerInfoWindowAdapter markerInfoWindowAdapter = new MarkerInfoWindowAdapter(getActivity());
+                    gmap_view.setInfoWindowAdapter(markerInfoWindowAdapter);
+
+                }
+                if (pakingLocationList.size() > 1) {
+                    try {
+                        int width = getResources().getDisplayMetrics().widthPixels;
+                        int height = map_view.getHeight();
+                        int padding = (int) (width * 0.12);
+                        gmap_view.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, padding));
+                        //  gmap_view.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 15));
+                    } catch (Exception ex) {
+                        float zoomLevel = (float) 12.0;
+                        LatLng latLng = new LatLng(Double.parseDouble(pakingLocationList.get(0).getLatitude()), Double.parseDouble(pakingLocationList.get(0).getLongitude()));
+                        gmap_view.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                        Log.d("error", ex.fillInStackTrace().toString());
+                    }
+                } else {
+                    float zoomLevel = (float) 15.0;
+                    LatLng latLng = new LatLng(Double.parseDouble(pakingLocationList.get(0).getLatitude()), Double.parseDouble(pakingLocationList.get(0).getLongitude()));
+                    gmap_view.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+
+                }
             }
-        } else {
-            float zoomLevel = (float) 15.0;
-            LatLng latLng=new LatLng(Double.parseDouble(pakingLocationList.get(0).getLatitude()), Double.parseDouble(pakingLocationList.get(0).getLongitude()));
-            gmap_view.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoomLevel));
-
-        }
-        //gmap_view.moveCamera(CameraUpdateFactory.newLatLng(controller.getCurrentLocation()));
-//        gmap_view.animateCamera(CameraUpdateFactory.newLatLngBounds(builder .build(), 100));
+        });
     }
     @Override
     public void onClick(View view) {
@@ -229,13 +289,7 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
 
             case R.id.category:
 
-              if(Utils.isNetworkAvailable(getActivity()))
-              {
-                  apiCall=getNearBYLocation;
-               progressDailog=Utils.showPogress(getActivity());
-               controller.getApiCall().getData(Common.getGetLocationByDistance(controller.getCurrentLocation().latitude,controller.getCurrentLocation().longitude,10),Home.this);
-              }
-
+             getData();
 
                 break;
             case R.id.back:
@@ -245,7 +299,51 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
 
 
                 break;
+
+            case R.id.viewSwitchIcon:
+                if(selectedView==1)
+                {
+                    selectedView=2;
+                    viewSwitchIcon.setImageResource(R.drawable.map_icon);
+                    map_view.setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
+                }else {
+                    selectedView=1;
+                    viewSwitchIcon.setImageResource(R.drawable.listview_icon);
+                    map_view.setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.aroundme:
+                getData();
+                range_llt.setVisibility(View.VISIBLE);
+                heading.setText("Parking House");
+                recentView.setBackground(getActivity().getResources().getDrawable(R.drawable.right_grey_button));
+                aroudnMe.setBackground(getActivity().getResources().getDrawable(R.drawable.left_blue_button));
+                recentView.setTextColor(getActivity().getResources().getColor(android.R.color.black));
+                aroudnMe.setTextColor(getActivity().getResources().getColor(R.color.white));
+                break;
+            case R.id.recentView:
+                getRecentView();
+                range_llt.setVisibility(View.INVISIBLE);
+                heading.setText("Kurzlich besucht");
+                recentView.setBackground(getActivity().getResources().getDrawable(R.drawable.right_blue_button));
+                aroudnMe.setBackground(getActivity().getResources().getDrawable(R.drawable.left_grey_button));
+                aroudnMe.setTextColor(getActivity().getResources().getColor(android.R.color.black));
+                recentView.setTextColor(getActivity().getResources().getColor(R.color.white));
+                break;
         }
+    }
+
+    public void getData()
+    {
+        if(Utils.isNetworkAvailable(getActivity()))
+        {
+            apiCall=getNearBYLocation;
+            progressDailog=Utils.showPogress(getActivity());
+            controller.getApiCall().getData(Common.getGetLocationByDistance(controller.getCurrentLocation().latitude,controller.getCurrentLocation().longitude,range),Home.this);
+        }
+
     }
 
     public void setCityName(String name) {
@@ -255,9 +353,6 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
         }
     }
 
-    public void getData(String lat, String lon) {
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -303,6 +398,8 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
                          }
                      }
                      if( pakingLocationList.size()>0) {
+                         Aroundme.pakingLocationList.clear();
+                         Aroundme.pakingLocationList.addAll(pakingLocationList);
                          handleCategory();
                      }
                 }else{
@@ -311,7 +408,41 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
 
 
                 break;
+
+            case getRecetView:
+                if(!value.contains("msg"))
+                {
+                    try {
+                        JSONArray jsonArray = new JSONArray(value);
+                        pakingLocationList.clear();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            try {
+                                pakingLocationList.add(new ParkingModel(jsonArray.getJSONObject(i)));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (pakingLocationList.size() > 0) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Aroundme.pakingLocationList.clear();
+                                    Aroundme.pakingLocationList.addAll(pakingLocationList);
+                                    listView.setAdapter(new adapter.ListAdapter(getActivity(), pakingLocationList));
+                                }
+                            });
+                            addMarkers();
+                        }
+                    }catch (JSONException e)
+                    {
+                        e.fillInStackTrace();
+                    }
+                }else{
+                    Utils.showToast(getActivity(),"No Recent Views");
+                }
+                break;
         }
+
         if(progressDailog!=null)
         {
             progressDailog.cancel();
@@ -326,12 +457,21 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
             progressDailog.cancel();
         }
     }
+    public void getRecentView()
+    {
+        if (Utils.isNetworkAvailable(getActivity())) {
+            apiCall = getRecetView;
+            progressDailog = Utils.showPogress(getActivity());
+            //controller.getApiCall().postFlormData(Common.getRecentView,controller.getProfile().getUser_id(),Aroundme.this);
+            controller.getApiCall().postFlormData(Common.getRecentView,"68",Home.this);
 
+        }
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gmap_view = googleMap;
 //        gmap_view.setMinZoomPreference(12);
 //        LatLng ny = new LatLng(40.7143528, -74.0059731);
-//        gmap_view.moveCamera(CameraUpdateFactory.newLatLng(ny));
+//       gmap_view.moveCamera(CameraUpdateFactory.newLatLng(ny));
     }
 }

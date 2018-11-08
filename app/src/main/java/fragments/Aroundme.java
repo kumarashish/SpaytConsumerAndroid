@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -32,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorCompletionService;
 
 import butterknife.ButterKnife;
 import common.AppController;
@@ -57,13 +59,17 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
     private MapView map_view;
     Bundle savedInstanceState;
     int apiCall = 0;
-    int getCategory = 1, getNearBYLocation = 2;
+   final  int getRecetView = 1;
+          final  int getNearBYLocation = 2;
     public static ArrayList<ParkingModel> pakingLocationList = new ArrayList<>();
     int range=10;
     Spinner rangeSelector;
     int []rangeArray={10,20,30,40,50,60,70,80,90,100};
     ImageView viewSwitchIcon;
     ListView listView;
+    Button aroudnMe,recentView;
+    LinearLayout range_llt;
+    TextView heading;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,7 +82,12 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
         rangeSelector=(Spinner) view.findViewById(R.id.range);
         viewSwitchIcon=(ImageView)view.findViewById(R.id.viewSwitchIcon);
         listView=(ListView) view.findViewById(R.id.listView);
-
+        aroudnMe=(Button)view.findViewById(R.id.aroundme);
+        recentView=(Button)view.findViewById(R.id.recentView);
+       range_llt=(LinearLayout)view.findViewById(R.id.range_llt);
+        heading=(TextView)view.findViewById(R.id.heading);
+        aroudnMe.setOnClickListener(this);
+        recentView.setOnClickListener(this);
 
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -250,35 +261,101 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
                     listView.setVisibility(View.GONE);
                 }
                 break;
+            case R.id.aroundme:
+                getData();
+                range_llt.setVisibility(View.VISIBLE);
+                heading.setText("");
+                recentView.setBackground(getActivity().getResources().getDrawable(R.drawable.right_grey_button));
+                aroudnMe.setBackground(getActivity().getResources().getDrawable(R.drawable.left_blue_button));
+                recentView.setTextColor(getActivity().getResources().getColor(android.R.color.black));
+                aroudnMe.setTextColor(getActivity().getResources().getColor(R.color.white));
+                break;
+            case R.id.recentView:
+                getRecentView();
+                range_llt.setVisibility(View.INVISIBLE);
+                heading.setText("Kurzlich besucht");
+                recentView.setBackground(getActivity().getResources().getDrawable(R.drawable.right_blue_button));
+                aroudnMe.setBackground(getActivity().getResources().getDrawable(R.drawable.left_grey_button));
+                aroudnMe.setTextColor(getActivity().getResources().getColor(android.R.color.black));
+                recentView.setTextColor(getActivity().getResources().getColor(R.color.white));
+                break;
+
 
         }
     }
 
 
+    public void getRecentView()
+    {
+        if (Utils.isNetworkAvailable(getActivity())) {
+            apiCall = getRecetView;
+            progressDailog = Utils.showPogress(getActivity());
+               //controller.getApiCall().postFlormData(Common.getRecentView,controller.getProfile().getUser_id(),Aroundme.this);
+            controller.getApiCall().postFlormData(Common.getRecentView,"68",Aroundme.this);
+
+        }
+    }
+
+
+
     @Override
     public void onSucess(String value) {
-
-        if (utils.Utils.getLocationsArray(value).length() > 0) {
-            pakingLocationList.clear();
-            JSONArray jsonArray = utils.Utils.getLocationsArray(value);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                try {
-                    pakingLocationList.add(new ParkingModel(jsonArray.getJSONObject(i)));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (pakingLocationList.size() > 0) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        listView.setAdapter(new adapter.ListAdapter(getActivity(),pakingLocationList));
+        switch (apiCall) {
+            case getNearBYLocation:
+                if (utils.Utils.getLocationsArray(value).length() > 0) {
+                    pakingLocationList.clear();
+                    JSONArray jsonArray = utils.Utils.getLocationsArray(value);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            pakingLocationList.add(new ParkingModel(jsonArray.getJSONObject(i)));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                });
-                addMarkers();
-            }
-        } else {
-            Utils.showToast(getActivity(), "Sorry ! No  places found to your near by location");
+                    if (pakingLocationList.size() > 0) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                listView.setAdapter(new adapter.ListAdapter(getActivity(), pakingLocationList));
+                            }
+                        });
+                        addMarkers();
+                    }
+                } else {
+
+                    Utils.showToast(getActivity(), "Sorry ! No  places found to your near by location");
+                }
+                break;
+            case getRecetView:
+                if(!value.contains("msg"))
+                {
+                    try {
+                        JSONArray jsonArray = new JSONArray(value);
+                        pakingLocationList.clear();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            try {
+                                pakingLocationList.add(new ParkingModel(jsonArray.getJSONObject(i)));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (pakingLocationList.size() > 0) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listView.setAdapter(new adapter.ListAdapter(getActivity(), pakingLocationList));
+                                }
+                            });
+                            addMarkers();
+                        }
+                    }catch (JSONException e)
+                    {
+                        e.fillInStackTrace();
+                    }
+                }else{
+                    Utils.showToast(getActivity(),"No Recent Views");
+                }
+                break;
         }
 
 

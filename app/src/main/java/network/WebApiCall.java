@@ -214,7 +214,63 @@ public class WebApiCall {
             }
         });
     }
+public void postFlormData(String url,String userId ,final WebApiResponseCallback callback)
+{
+    OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS).build();
+    RequestBody formBody = null;
+    formBody = new FormBody.Builder()
+            .add("user_id", userId)
+            .build();
+    Request request = new Request.Builder().url(url).post(formBody).build();
+    client.newCall(request).enqueue(new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
 
+            callback.onError(e.fillInStackTrace().toString());
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            if (response.code() == 200 || response.code() == 201) {
+                if (response != null) {
+                    callback.onSucess(response.body().string());
+                } else {
+                    callback.onError(response.message());
+                }
+            } else {
+                callback.onError(response.message());
+            }
+        }
+    });
+}
+
+    public String postFlormData(String url,String userId)
+    {
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS).build();
+        RequestBody formBody = null;
+        formBody = new FormBody.Builder()
+                .add("user_id", userId)
+                .build();
+        Request request = new Request.Builder().url(url).post(formBody).build();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.code() == 200) {
+                return response.body().string();
+
+            } else {
+                return getErrorData();
+            }
+
+        } catch (Exception ex) {
+            ex.fillInStackTrace();
+            return getErrorData();
+        }
+
+    }
     public void register(String url, String fname, String lname, String email, String password, final WebApiResponseCallback callback) {
 
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)

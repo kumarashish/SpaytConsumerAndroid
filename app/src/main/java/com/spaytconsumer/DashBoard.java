@@ -32,6 +32,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -76,7 +77,8 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
     Fragment currentFragment;
     final int permission = 2;
     private LocationManager mlocManager;
-
+    Spinner rangeSelector;
+    int []rangeArray={10,20,30,40,50,60,70,80,90,100};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +95,10 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
             public void run() {
                 if(Utils.isNetworkAvailable(DashBoard.this))
                 {
-                String response= controller.getApiCall().postData(Common.isTimerStartedUrl,timmerStartedRequest().toString());
+                String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,controller.getProfile().getUser_id());
+                boolean isTimerStarted=Utils.isTimerStarted(response);
+                if(isTimerStarted)
+                {}  
                 Log.d("response",response);
                 }
 
@@ -136,17 +141,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
     }
-public JSONObject timmerStartedRequest()
-{
-    JSONObject jsonObject=new JSONObject();
-    try{
-        jsonObject.put("user_id",controller.getProfile().getUser_id());
-    }catch (Exception ex)
-    {
-        ex.fillInStackTrace();
-    }
-    return jsonObject;
-}
+
     protected void stopLocationUpdates() {
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, (LocationListener) DashBoard.this);
