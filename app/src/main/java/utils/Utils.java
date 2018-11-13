@@ -151,4 +151,18 @@ public static JSONArray getJSonArray(String value)
         }
         return null;
     }
+
+    public static boolean isTimerStarted(String value)
+    {
+        try{
+            JSONObject jsonObject=new JSONObject(value);
+
+            return jsonObject.getBoolean("istimerstarted");
+        }catch (Exception ex)
+        {
+            ex.fillInStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -15,5 +15,17 @@
     <string name="err_msg_different_password">Password and Confirm password should be same</string>
     <string name="facebook_app_id">2009635299131248</string>
     <string name="fb_login_protocol_scheme">fb2009635299131248</string>
+    <array name="rangearray">
+        <item>10 km</item>
+        <item>20 km</item>
+        <item>30 km</item>
+        <item>40 km</item>
+        <item>50 km</item>
+        <item>60 km</item>
+        <item>70 km</item>
+        <item>80 km</item>
+        <item>90 km</item>
+        <item>100 km</item>
+    </array>
 
 </resources>

@@ -14,7 +14,7 @@
         android:title="" />
     <item
         android:id="@+id/navigation_around_me"
-        android:icon="@drawable/around_me_icon"
+        android:icon="@drawable/aroundme_icon"
         android:title="" />
 
     <item
