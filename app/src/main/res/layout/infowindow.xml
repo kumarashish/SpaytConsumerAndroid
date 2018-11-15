@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_margin="10dp"
+        android:layout_width="250dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/placeName"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            android:text=""
+            android:textColor="@color/skyblue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/address"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="14dp"
+            android:text=""
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:textSize="14dp"
+            android:text=""
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:textSize="12dp"
+            android:id="@+id/booknow"
+            android:text="JETZT BUCHEN"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_corner_box"
+            android:layout_width="150dp"
+            android:layout_height="50dp" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
