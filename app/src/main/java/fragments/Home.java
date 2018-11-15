@@ -253,6 +253,16 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
                     marker.setTag(i);
                     MarkerInfoWindowAdapter markerInfoWindowAdapter = new MarkerInfoWindowAdapter(getActivity());
                     gmap_view.setInfoWindowAdapter(markerInfoWindowAdapter);
+                    gmap_view.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+                            BookKnow.model=model;
+                            Intent intent = new Intent(getActivity(), BookKnow.class);
+                            startActivity(intent);
+                            marker.hideInfoWindow();
+                        }
+
+                    });
 
                 }
                 if (pakingLocationList.size() > 1) {
@@ -467,7 +477,7 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
             apiCall = getRecetView;
             progressDailog = Utils.showPogress(getActivity());
             //controller.getApiCall().postFlormData(Common.getRecentView,controller.getProfile().getUser_id(),Aroundme.this);
-            controller.getApiCall().postFlormData(Common.getRecentView,"68",Home.this);
+            controller.getApiCall().postFlormData(Common.getRecentView,Common.userIdKey,"68",Home.this);
 
         }
     }

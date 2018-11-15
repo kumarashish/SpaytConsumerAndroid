@@ -5,20 +5,25 @@ package common;
  */
 
 public class Common {
-    public static String baseUrl="https://api.spayt.de/";
-    public static String register=baseUrl+"consumers/register?";
-    public static String registerWithFb=baseUrl+"user/facebook_register";
+    public static String baseUrl="https://api.spayt.de/user/";
+    public static String register=baseUrl+"register?";
+    public static String registerWithFb=baseUrl+"facebook_register";
     //public static String loginwithFb=baseUrl+"user/facebook_login";
-    public static String login=baseUrl+"consumers/login";
-    public static String forgetPassword=baseUrl+"user/forgot_password";
-    public static String logout=baseUrl+"consumers/logout";
-    public static String getCategories=baseUrl+"user/get_categories";
-    public static String locationOffers=baseUrl+"consumers/business_location_offers";
-    public static String getLocationByDistance=baseUrl+"user/distance_by_km?";
-    public static String updateProfile=baseUrl+"user/update_prinfo";
+    public static String login=baseUrl+"login";
+    public static String forgetPassword=baseUrl+"forgot_password";
+    public static String logout=baseUrl+"logout";
+    public static String getCategories=baseUrl+"get_categories";
+    public static String locationOffers=baseUrl+"business_location_offers";
+    public static String getLocationByDistance=baseUrl+"distance_by_km?";
+    public static String updateProfile=baseUrl+"update_prinfo";
     public static String googleMapsApiKey="AIzaSyARyIWs_8t0_hIrTPGqMsOPboaEa5T25Qs";
-    public static String isTimerStartedUrl=baseUrl+"user/getPaymentAfterKillProcess";
-    public static String getRecentView=baseUrl+"user/business_location_recently_viewed";
+    public static String isTimerStartedUrl=baseUrl+"getPaymentAfterKillProcess";
+    public static String getRecentView=baseUrl+"business_location_recently_viewed";
+    public static String getlocationDetails=baseUrl+"location_details";
+    public static String getUSerCarPlate=baseUrl+"getUserParkingCar";
+
+    public static String userIdKey="user_id";
+    public static String idKey="id";
 
 
 

@@ -214,14 +214,14 @@ public class WebApiCall {
             }
         });
     }
-public void postFlormData(String url,String userId ,final WebApiResponseCallback callback)
+public void postFlormData(String url,String key,String userId ,final WebApiResponseCallback callback)
 {
     OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS).build();
     RequestBody formBody = null;
     formBody = new FormBody.Builder()
-            .add("user_id", userId)
+            .add(key, userId)
             .build();
     Request request = new Request.Builder().url(url).post(formBody).build();
     client.newCall(request).enqueue(new Callback() {

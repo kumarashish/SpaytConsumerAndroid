@@ -8,44 +8,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:background="@color/white"
-        android:weightSum="4"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <Button
-            android:id="@+id/back"
-            android:rotation="180"
-            android:layout_centerVertical="true"
-            android:backgroundTint="@android:color/black"
-            android:background="@drawable/go"
-            android:layout_marginLeft="10dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
-        <TextView
-            android:id="@+id/heading"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:gravity="center"
-
-            android:text="Standortdaten"
+        <RelativeLayout
+            android:background="@color/white"
+            android:weightSum="4"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="50dp">
+            <Button
+                android:id="@+id/back"
+                android:rotation="180"
+                android:layout_centerVertical="true"
+                android:backgroundTint="@android:color/black"
+                android:background="@drawable/go"
+                android:layout_marginLeft="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            <TextView
+                android:id="@+id/heading"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:gravity="center"
 
-    </RelativeLayout>
+                android:text="Standortdaten"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </RelativeLayout>
         <ImageView
             android:background="@drawable/header"
             android:layout_width="match_parent"
             android:layout_height="100dp" />
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
         <LinearLayout
             android:layout_margin="10dp"
             android:orientation="horizontal"
@@ -60,7 +53,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:textColor="@android:color/black"
-                android:text=""
+                android:text="VIktoria"
                 android:textSize="16dp"
 
                 android:textStyle="bold"
@@ -82,21 +75,22 @@
                 android:src="@drawable/map"
                 android:layout_width="30dp"
                 android:layout_height="30dp" />
-            <TextView
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:textColor="@android:color/black"
-                android:text="Adresse:"
-                android:textStyle="bold"
-                android:textSize="16dp"
 
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="Adresse:"
+                android:textColor="@android:color/black"
+
+                android:textSize="16dp"
+                android:textStyle="bold" />
             <TextView
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:textColor="@android:color/black"
-                android:text=""
+                android:text="Rubenstra"
                 android:textSize="16dp"
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
@@ -118,7 +112,6 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp" />
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -129,19 +122,17 @@
                 android:textStyle="bold" />
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
-                    android:id="@+id/openingHours_tv"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@color/skyblue"
-                    android:text="Jetzt geoeffnet"
-                    android:textSize="16dp"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/skyblue"
+                android:text="Jetzt geoeffnet"
+                android:textSize="16dp"
+               android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
                 <ImageView
-                    android:id="@+id/openingHours_icon"
                     android:src="@drawable/dropdown"
                     android:layout_marginRight="10dp"
                     android:layout_alignParentRight="true"
@@ -151,45 +142,20 @@
 
 
         </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-             android:visibility="gone"
+        <ListView
+            android:visibility="gone"
             android:scrollbars="none"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
-            android:id="@+id/openingHours"
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <View
             android:background="@android:color/darker_gray"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
-        <TextView
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
 
-            android:layout_marginTop="10dp"
-            android:textColor="@android:color/black"
-            android:text="Kennzeichen"
-            android:textSize="16dp"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:focusable="false"
-            android:id="@+id/carPlateNumber"
-            android:text=""
-            android:textSize="16dp"
-            android:layout_marginBottom="10dp"
-            android:paddingLeft="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/rounded_corner_box"
-            android:layout_width="match_parent"
-            android:layout_height="35dp" />
         <LinearLayout
-
             android:layout_margin="10dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -203,39 +169,37 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <TextView
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:textColor="@android:color/black"
-                android:text="Parkgebuhren"
-                android:textSize="16dp"
-
-                android:textStyle="bold"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:textColor="@android:color/black"
-                    android:text="Mindestens Parkzeiten"
+                    android:text="Parkgebuhren"
                     android:textSize="16dp"
 
-                    android:gravity="left"
+                    android:textStyle="bold"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@android:color/black"
+                        android:text="Mindestens Parkzeiten"
+                        android:textSize="16dp"
+
+                        android:gravity="left"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                     <TextView
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="80dp"
                         android:textColor="@android:color/black"
-                        android:text=""
-                        android:id="@+id/minHour"
+                        android:text=" 1 "
                         android:textSize="16dp"
 
 
@@ -244,27 +208,25 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@android:color/black"
-                    android:text="Maximales Parkgebuhr pro Tag"
-                    android:textSize="16dp"
-
-                    android:gravity="left"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
                     <TextView
-                        android:id="@+id/maximumParkingAmount"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@android:color/black"
+                        android:text="Maximales Parkgebuhr pro Tag"
+                        android:textSize="16dp"
+
+                        android:gravity="left"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="20dp"
                         android:textColor="@android:color/black"
-                        android:text=" € "
+                        android:text=" € 3.00"
                         android:textSize="16dp"
 
 
@@ -272,27 +234,25 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="left"
-                    android:textColor="@android:color/black"
-                    android:text="Parkgebuhr pro Stunde"
-                    android:textSize="16dp"
-
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
                     <TextView
-                        android:id="@+id/perHourCharge"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="left"
+                        android:textColor="@android:color/black"
+                        android:text="Parkgebuhr pro Stunde"
+                        android:textSize="16dp"
+
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="80dp"
                         android:textColor="@android:color/black"
-                        android:text=" €"
+                        android:text=" € 1.00"
                         android:textSize="16dp"
 
 
@@ -303,24 +263,16 @@
 
         </LinearLayout>
         <RelativeLayout
-            android:layout_marginTop="55dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <Button
                 android:layout_alignParentBottom="true"
                 android:text="Jetzt Kaufen"
                 android:textStyle="bold"
-                android:id="@+id/booknow"
                 android:textColor="@color/white"
                 android:background="@color/green"
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />
         </RelativeLayout>
-
     </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>
-
-

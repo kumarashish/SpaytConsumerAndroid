@@ -206,8 +206,8 @@ BookNowCallBack callBack;
 
                     int height = 100;
                     int width = 100;
-                    BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.parking);
-                    Bitmap b=bitmapdraw.getBitmap();
+                    BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.parking);
+                    Bitmap b = bitmapdraw.getBitmap();
                     Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
                     // Setting custom icon for the marker
                     markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
@@ -219,11 +219,20 @@ BookNowCallBack callBack;
 
                     // Adding the marker to the map
 
-                            Marker marker= gmap_view.addMarker(markerOptions);
-                            marker.setTag(i);
+                    Marker marker = gmap_view.addMarker(markerOptions);
+                    marker.setTag(i);
                     MarkerInfoWindowAdapter markerInfoWindowAdapter = new MarkerInfoWindowAdapter(getActivity());
                     gmap_view.setInfoWindowAdapter(markerInfoWindowAdapter);
+                    gmap_view.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+                            BookKnow.model=pakingLocationList.get((Integer)marker.getTag());
+                            Intent intent = new Intent(getActivity(), BookKnow.class);
+                            startActivity(intent);
+                            marker.hideInfoWindow();
+                        }
 
+                    });
                 }
                 if (pakingLocationList.size() > 1) {
                     try {
@@ -295,7 +304,7 @@ BookNowCallBack callBack;
             apiCall = getRecetView;
             progressDailog = Utils.showPogress(getActivity());
                //controller.getApiCall().postFlormData(Common.getRecentView,controller.getProfile().getUser_id(),Aroundme.this);
-            controller.getApiCall().postFlormData(Common.getRecentView,"68",Aroundme.this);
+            controller.getApiCall().postFlormData(Common.getRecentView,Common.userIdKey,"68",Aroundme.this);
 
         }
     }

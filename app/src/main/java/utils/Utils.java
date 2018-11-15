@@ -165,4 +165,14 @@ public static JSONArray getJSonArray(String value)
         return false;
     }
 
+    public static String getcarPlateNumber(String value) {
+        try{
+            JSONObject jsonObject=new JSONObject(value);
+           return jsonObject.getString("parking_carplate_no");
+        }catch (Exception ex)
+        {
+            ex.fillInStackTrace();
+        }
+        return "";
+    }
 }
