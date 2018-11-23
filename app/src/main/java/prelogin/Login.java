@@ -148,7 +148,6 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
                         Log.d("Status", exception.toString());
                     }
                 });
-
     }
 
 
@@ -210,22 +209,15 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
         }
     }
 
-
-
     private class MyTextWatcher implements TextWatcher {
-
         private View view;
-
         private MyTextWatcher(View view) {
             this.view = view;
         }
-
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         }
-
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         }
-
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
                 case R.id.input_email:
@@ -237,8 +229,6 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
 
             }
         }
-
-
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

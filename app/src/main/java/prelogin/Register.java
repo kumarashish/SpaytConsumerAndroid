@@ -97,7 +97,9 @@ public class Register extends Activity implements View.OnClickListener, WebApiRe
         }
         if (utils.Utils.isNetworkAvailable(Register.this)) {
             dialog = utils.Utils.showPogress(this);
-            controller.getApiCall().register(Common.register,input_fname.getText().toString(),input_Lname.getText().toString(),edt_email.getText().toString(),input_password.getText().toString(), this);
+            //controller.getApiCall().register(Common.register,input_fname.getText().toString(),input_Lname.getText().toString(),edt_email.getText().toString(),input_password.getText().toString(), this);
+            controller.getApiCall().getData(Common.getRegisterUrl(input_fname.getText().toString(),input_Lname.getText().toString(),edt_email.getText().toString(),input_password.getText().toString()), this);
+
         }
     }
 
