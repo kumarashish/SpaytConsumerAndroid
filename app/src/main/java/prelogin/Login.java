@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -80,15 +81,22 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
     int login=1,loginWithFb=2,registerwithFb=3;
     Dialog dialog;
     CallbackManager  callbackManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window w = getWindow(); // in Activity's onCreate() for instance
-            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }
         setContentView(R.layout.login);
         ButterKnife.bind(this);
+        if( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)&&(Build.VERSION.SDK_INT <27) ){
+            Window w = getWindow(); // in Activity's onCreate() for instance
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }else if(Build.VERSION.SDK_INT >=27){
+            Window w = getWindow(); // in Activity's onCreate() for instance
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)btn_login.getLayoutParams();
+            params.bottomMargin=120;
+        }
+
         controller=(AppController)getApplicationContext();
         validation=new Validation(this);
         edt_email.addTextChangedListener(new MyTextWatcher(edt_email));
@@ -96,9 +104,10 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
         btn_login.setOnClickListener(this);
         btn_fblogin.setOnClickListener(this);
         fbLogin.setOnClickListener(this);
-        btn_fblogin.setReadPermissions(Arrays.asList(EMAIL,"public_profile"));
+        btn_fblogin.setReadPermissions("email", "public_profile", "user_friends");
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().logOut();
+
         btn_fblogin.registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override

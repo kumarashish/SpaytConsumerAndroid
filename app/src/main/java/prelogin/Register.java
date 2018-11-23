@@ -9,6 +9,7 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -57,17 +58,24 @@ public class Register extends Activity implements View.OnClickListener, WebApiRe
     Validation validation;
     Dialog dialog;
     AppController controller;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        setContentView(R.layout.register);
+        ButterKnife.bind(this);
+        if( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)&&(Build.VERSION.SDK_INT <27) ){
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }else if(Build.VERSION.SDK_INT >=27){
+            Window w = getWindow(); // in Activity's onCreate() for instance
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)register.getLayoutParams();
+            params.bottomMargin=120;
         }
-        setContentView(R.layout.register);
         validation=new Validation(this);
         controller=(AppController)getApplicationContext();
-        ButterKnife.bind(this);
+
         back.setOnClickListener(this);
         register.setOnClickListener(this);
        input_fname.addTextChangedListener(new MyTextWatcher( input_fname));

@@ -79,15 +79,25 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
     private LocationManager mlocManager;
     Spinner rangeSelector;
     int []rangeArray={10,20,30,40,50,60,70,80,90,100};
+
+    @BindView(R.id.navigation)
+    android.support.design.widget.BottomNavigationView bottomView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        ButterKnife.bind(this);
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) &&(Build.VERSION.SDK_INT <27)) {
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        }else if(Build.VERSION.SDK_INT >=27){
+            Window w = getWindow(); // in Activity's onCreate() for instance
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)bottomView.getLayoutParams();
+            params.bottomMargin=120;
         }
-        ButterKnife.bind(this);
+
         controller = (AppController) getApplicationContext();
         frameLayout=(FrameLayout)content.findViewById(R.id.frame) ;
         Thread t=new Thread(new Runnable() {
