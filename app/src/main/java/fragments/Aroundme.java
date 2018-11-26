@@ -56,14 +56,13 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
     AppController controller;
 
     Dialog progressDailog;
-   int selectedView=1;
-
+    int selectedView=1;
     GoogleMap gmap_view;
     private MapView map_view;
     Bundle savedInstanceState;
     int apiCall = 0;
-   final  int getRecetView = 1;
-          final  int getNearBYLocation = 2;
+    final  int getRecetView = 1;
+    final  int getNearBYLocation = 2;
     public static ArrayList<ParkingModel> pakingLocationList = new ArrayList<>();
     int range=10;
     Spinner rangeSelector;
@@ -73,12 +72,11 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
     Button aroudnMe,recentView;
     LinearLayout range_llt;
     TextView heading;
-BookNowCallBack callBack;
+    BookNowCallBack callBack;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.around_me,
-                container, false);
+        View view = inflater.inflate(R.layout.around_me, container, false);
         ButterKnife.bind(getActivity());
         controller = (AppController) getActivity().getApplicationContext();
         callBack=this;
@@ -88,11 +86,10 @@ BookNowCallBack callBack;
         listView=(ListView) view.findViewById(R.id.listView);
         aroudnMe=(Button)view.findViewById(R.id.aroundme);
         recentView=(Button)view.findViewById(R.id.recentView);
-       range_llt=(LinearLayout)view.findViewById(R.id.range_llt);
+        range_llt=(LinearLayout)view.findViewById(R.id.range_llt);
         heading=(TextView)view.findViewById(R.id.heading);
         aroudnMe.setOnClickListener(this);
         recentView.setOnClickListener(this);
-
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(Common.googleMapsApiKey);
@@ -133,28 +130,23 @@ BookNowCallBack callBack;
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         Bundle mapViewBundle = outState.getBundle(Common.googleMapsApiKey);
         if (mapViewBundle == null) {
             mapViewBundle = new Bundle();
             outState.putBundle(Common.googleMapsApiKey, mapViewBundle);
         }
-
         map_view.onSaveInstanceState(mapViewBundle);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         map_view.onResume();
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
         map_view.onStart();
 
     }
@@ -200,10 +192,8 @@ BookNowCallBack callBack;
                 for (int i = 0; i < pakingLocationList.size(); i++) {
                     final ParkingModel model = pakingLocationList.get(i);
                     MarkerOptions markerOptions = new MarkerOptions();
-
                     // Setting position for the marker
                     markerOptions.position(new LatLng(Double.parseDouble(model.getLatitude()), Double.parseDouble(model.getLongitude())));
-
                     int height = 100;
                     int width = 100;
                     BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.parking);
@@ -213,12 +203,8 @@ BookNowCallBack callBack;
                     markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                     // Setting title for the infowindow
                     markerOptions.title(model.getLocation_name());
-
-
                     builder.include(markerOptions.getPosition());
-
                     // Adding the marker to the map
-
                     Marker marker = gmap_view.addMarker(markerOptions);
                     marker.setTag(i);
                     MarkerInfoWindowAdapter markerInfoWindowAdapter = new MarkerInfoWindowAdapter(getActivity());
@@ -388,9 +374,6 @@ BookNowCallBack callBack;
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gmap_view = googleMap;
-//        gmap_view.setMinZoomPreference(12);
-//        LatLng ny = new LatLng(40.7143528, -74.0059731);
-//        gmap_view.moveCamera(CameraUpdateFactory.newLatLng(ny));
     }
 
     @Override

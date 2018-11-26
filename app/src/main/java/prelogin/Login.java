@@ -104,7 +104,7 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
         btn_login.setOnClickListener(this);
         btn_fblogin.setOnClickListener(this);
         fbLogin.setOnClickListener(this);
-        btn_fblogin.setReadPermissions("email", "public_profile", "user_friends");
+        btn_fblogin.setReadPermissions("email", "public_profile");
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().logOut();
 
