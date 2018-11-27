@@ -125,9 +125,10 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
                                         Log.v("LoginActivity", response.toString());
                                         try {
                                             // Application code
-                                            String email = response.getJSONObject().getString("email");
                                             String id = response.getJSONObject().getString("id");
                                             String name = response.getJSONObject().getString("name");
+                                            String email = response.getJSONObject().getString("email");
+
                                             apiCall = loginWithFb;
                                             dialog = utils.Utils.showPogress(Login.this);
                                             controller.getApiCall().loginWithFb(Common.registerWithFb, id, email, name, utils.Utils.getDeviceID(Login.this), loginResult.getAccessToken().getToken(), Login.this);

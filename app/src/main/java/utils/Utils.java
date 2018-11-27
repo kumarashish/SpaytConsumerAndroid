@@ -152,17 +152,17 @@ public static JSONArray getJSonArray(String value)
         return null;
     }
 
-    public static boolean isTimerStarted(String value)
+    public static boolean[] isTimerStarted(String value)
     {
-        try{
-            JSONObject jsonObject=new JSONObject(value);
+        try{JSONObject jsonObj=new JSONObject(value);
+            JSONObject jsonObject=jsonObj.getJSONObject("users_timer");
 
-            return jsonObject.getBoolean("istimerstarted");
+            return new boolean[]{jsonObject.getBoolean("IsTimerStarted"),jsonObject.getBoolean("IsTimerStoped"),jsonObject.getBoolean("IsPaymentDone")};
         }catch (Exception ex)
         {
             ex.fillInStackTrace();
         }
-        return false;
+        return new boolean[]{};
     }
 
     public static String getcarPlateNumber(String value) {

@@ -105,10 +105,27 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
             public void run() {
                 if(Utils.isNetworkAvailable(DashBoard.this))
                 {
-                String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,controller.getProfile().getUser_id());
-                boolean isTimerStarted=Utils.isTimerStarted(response);
-                if(isTimerStarted)
-                {}  
+                //String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,controller.getProfile().getUser_id());
+                    String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,"68");
+                boolean[] status=Utils.isTimerStarted(response);
+
+                if(status.length>0)
+                {
+                    if(status[0]==true)
+                    {
+                        if(status[1]==true)
+                        {
+                            if(status[2]==false)
+                            {
+                                /////navigate to payment page
+                                Utils.showToast(DashBoard.this,"Navigate to payment page");
+                            }
+                        }else {
+                            /////navigate to payment page running timer
+                            Utils.showToast(DashBoard.this,"Navigate to running timer");
+                        }
+                    }
+                }
                 Log.d("response",response);
                 }
 
