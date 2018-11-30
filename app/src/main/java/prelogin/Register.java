@@ -64,10 +64,10 @@ public class Register extends Activity implements View.OnClickListener, WebApiRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
         ButterKnife.bind(this);
-        if( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)&&(Build.VERSION.SDK_INT <27) ){
+        if( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)&&(Build.VERSION.SDK_INT <26) ){
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }else if(Build.VERSION.SDK_INT >=27){
+        }else if(Build.VERSION.SDK_INT >=6){
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)register.getLayoutParams();

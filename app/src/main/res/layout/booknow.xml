@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -36,10 +36,16 @@
 
     </RelativeLayout>
         <ImageView
+            android:id="@+id/header"
             android:background="@drawable/header"
             android:layout_width="match_parent"
             android:layout_height="100dp" />
+
+
+
         <ScrollView
+            android:layout_below="@+id/header"
+            android:layout_marginBottom="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <LinearLayout
@@ -300,26 +306,24 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
-
+<View
+    android:layout_width="match_parent"
+    android:layout_height="80dp"/>
         </LinearLayout>
-        <RelativeLayout
-            android:layout_marginTop="55dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <Button
-                android:layout_alignParentBottom="true"
-                android:text="Jetzt Kaufen"
-                android:textStyle="bold"
-                android:id="@+id/booknow"
-                android:textColor="@color/white"
-                android:background="@color/green"
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
-        </RelativeLayout>
+
 
     </LinearLayout>
         </ScrollView>
-    </LinearLayout>
+        <Button
+            android:layout_alignParentBottom="true"
+            android:text="Jetzt Kaufen"
+            android:textStyle="bold"
+            android:id="@+id/booknow"
+            android:textColor="@color/white"
+            android:background="@color/green"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
 

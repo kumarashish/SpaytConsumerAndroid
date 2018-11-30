@@ -9,6 +9,7 @@ import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +76,8 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
     TextView forgetPassword;
     @BindView(R.id.txtvw_register)
     TextView register;
+    @BindView(R.id.layout)
+    CoordinatorLayout layout;
     Validation validation;
     private static final String EMAIL = "email";
     AppController controller;
@@ -87,14 +91,14 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         ButterKnife.bind(this);
-        if( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)&&(Build.VERSION.SDK_INT <27) ){
+        if( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)&&(Build.VERSION.SDK_INT <26) ){
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }else if(Build.VERSION.SDK_INT >=27){
+        }else if(Build.VERSION.SDK_INT >=26){
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)btn_login.getLayoutParams();
-            params.bottomMargin=120;
+            params.bottomMargin=180;
         }
 
         controller=(AppController)getApplicationContext();
