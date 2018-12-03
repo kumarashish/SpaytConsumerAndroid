@@ -12,25 +12,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.spaytconsumer.R;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import adapter.Invoices_ListAdapter;
 import common.AppController;
 import common.Common;
 import intefaces.WebApiResponseCallback;
+import models.OrderDetailsModel;
 import models.UserProfile;
 import utils.Utils;
 
 /**
  * Created by ashish.kumar on 30-10-2018.
  */
-
 public class Account extends Fragment implements View.OnClickListener , WebApiResponseCallback{
     LinearLayout view1;
     LinearLayout view2;
@@ -40,11 +44,14 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
     EditText fname;
     EditText lname;
     TextView jan,feb,march,april,may,june,july,august,sep,oct,nov,dec;
+    ListView invoices_list;
     HorizontalScrollView scrollView;
-AppController controller;
-Dialog dialog;
-int apiCall=0;
-int updateProfile=1,getInvoice=2;
+    AppController controller;
+    Dialog dialog;
+    int apiCall=0;
+    int updateProfile=1,getInvoice=2;
+    int currentYear=2018;
+    ArrayList<OrderDetailsModel>orderList=new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,6 +81,7 @@ int updateProfile=1,getInvoice=2;
         oct=(TextView)view.findViewById(R.id.oct);
         nov=(TextView)view.findViewById(R.id.nov);
         dec=(TextView)view.findViewById(R.id.dec);
+        invoices_list=(ListView)view.findViewById(R.id.invoices_list);
         back=(Button) view.findViewById(R.id.back);
         back2=(Button) view.findViewById(R.id.back2);
         scrollView=(HorizontalScrollView)  view.findViewById(R.id.horizontalScrollView);
@@ -100,7 +108,7 @@ int updateProfile=1,getInvoice=2;
                    if((fname.getText().length()>0)&&(lname.getText().length()>0))
                     {
                         if(Utils.isNetworkAvailable(getActivity()))
-                        {
+                        {   apiCall=updateProfile;
                             dialog=Utils.showPogress(getActivity());
                             controller.getApiCall().postData(Common.updateProfile,upDateProfileJSON().toString(),Account.this);
                         }
@@ -132,6 +140,15 @@ int updateProfile=1,getInvoice=2;
         }
         return jsonObject;
     }
+
+    public void getData(int currentMonth) {
+        if (Utils.isNetworkAvailable(getActivity())) {
+            apiCall=getInvoice;
+            dialog = Utils.showPogress(getActivity());
+             controller.getApiCall().getInvoices(Common.getInvoices, controller.getProfile().getUser_id(), Integer.toString(currentMonth), Integer.toString(currentYear), Account.this);
+            //controller.getApiCall().getInvoices(Common.getInvoices,"81", Integer.toString(currentMonth), Integer.toString(currentYear), Account.this);
+        }
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId())
@@ -143,13 +160,16 @@ int updateProfile=1,getInvoice=2;
             case      R.id.ruchnungen:
                 Calendar c = Calendar.getInstance();
                 int month = c.get(Calendar.MONTH);
+               currentYear=c.get(Calendar.YEAR);
                    month=month+1;
+                getData(month);
                    if(month>5)
                    {
                        scrollView.post(new Runnable() {
                            @Override
                            public void run() {
                                scrollView.fullScroll(View.FOCUS_RIGHT);
+
                            }
                        });
                    }
@@ -167,39 +187,51 @@ int updateProfile=1,getInvoice=2;
                 break;
             case R.id.jan:
                 handleMonth(1);
+                getData(1);
                 break;
             case R.id.feb:
                 handleMonth(2);
+                getData(2);
                 break;
             case R.id.mar:
                 handleMonth(3);
+                getData(3);
                 break;
             case R.id.aprl:
                 handleMonth(4);
+                getData(4);
                 break;
             case R.id.may:
                 handleMonth(5);
+                getData(5);
                 break;
             case R.id.jun:
                 handleMonth(6);
+                getData(6);
                 break;
             case R.id.jul:
                 handleMonth(7);
+                getData(7);
                 break;
             case R.id.aug:
                 handleMonth(8);
+                getData(8);
                 break;
             case R.id.sep:
                 handleMonth(9);
+                getData(9);
                 break;
             case R.id.oct:
                 handleMonth(10);
+                getData(10);
                 break;
             case R.id.nov:
                 handleMonth(11);
+                getData(11);
                 break;
             case R.id.dec:
                 handleMonth(12);
+                getData(12);
                 break;
         }
     }
@@ -381,13 +413,51 @@ int updateProfile=1,getInvoice=2;
 
     @Override
     public void onSucess(String value) {
-        if(   utils.Utils.getStatus(value)) {
-            UserProfile profile=controller.getProfile();
-            profile.setFirst_name(fname.getText().toString());
-            profile.setLast_name(lname.getText().toString());
-            controller.setProfile(profile);
-        }
-        utils.Utils.showToast(getActivity(), utils.Utils.getMessage(value));
+
+            switch (apiCall) {
+                case 1:
+                    if(   utils.Utils.getStatus(value)) {
+                        UserProfile profile = controller.getProfile();
+                        profile.setFirst_name(fname.getText().toString());
+                        profile.setLast_name(lname.getText().toString());
+                        controller.setProfile(profile);
+                    }else {
+                        utils.Utils.showToast(getActivity(), utils.Utils.getMessage(value));
+                    }
+                break;
+                case 2:
+                    orderList.clear();
+                    if(!value.contains("False"))
+                    {
+                        try {
+                            JSONObject jsonObject = new JSONObject(value);
+                            JSONArray jsonArray = jsonObject.getJSONArray("Order Details");
+                            for(int i=0;i<jsonArray.length();i++)
+                            {
+                                orderList.add(new OrderDetailsModel(jsonArray.getJSONObject(i)));
+                            }
+                        }catch (Exception ex)
+                        {
+                            ex.fillInStackTrace();
+                        }
+                    }
+                    if(orderList.size()>0)
+                    {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                invoices_list.setAdapter(new Invoices_ListAdapter(orderList,getActivity()));
+                                invoices_list.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }else{
+                        invoices_list.setVisibility(View.GONE);
+                        Utils.showToast(getActivity(),"No record found");
+                    }
+                    break;
+            }
+
+
         if(dialog!=null)
         {
             dialog.cancel();

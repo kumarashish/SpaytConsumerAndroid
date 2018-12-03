@@ -100,7 +100,6 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)btn_login.getLayoutParams();
             params.bottomMargin=180;
         }
-
         controller=(AppController)getApplicationContext();
         validation=new Validation(this);
         edt_email.addTextChangedListener(new MyTextWatcher(edt_email));

@@ -21,6 +21,8 @@ public class Common {
     public static String getRecentView=baseUrl+"business_location_recently_viewed";
     public static String getlocationDetails=baseUrl+"location_details";
     public static String getUSerCarPlate=baseUrl+"getUserParkingCar";
+    public static String getInvoices=baseUrl+"get_invoices";
+
 
     public static String userIdKey="user_id";
     public static String idKey="id";

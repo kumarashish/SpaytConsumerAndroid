@@ -181,7 +181,6 @@ public class WebApiCall {
     }
     public void login(String url, String email, String password,String deviceId, final WebApiResponseCallback callback) {
 
-
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS).build();
@@ -191,6 +190,41 @@ public class WebApiCall {
                 .add("email", email)
                 .add("password", password)
                 .add("device_id", deviceId)
+                .build();
+        Request request = new Request.Builder().url(url).post(formBody).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+                callback.onError(e.fillInStackTrace().toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200 || response.code() == 201) {
+                    if (response != null) {
+                        callback.onSucess(response.body().string());
+                    } else {
+                        callback.onError(response.message());
+                    }
+                } else {
+                    callback.onError(response.message());
+                }
+            }
+        });
+    }
+
+    public void getInvoices(String url, String user_id, String month,String year, final WebApiResponseCallback callback) {
+
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS).build();
+        RequestBody formBody = null;
+
+        formBody = new FormBody.Builder()
+                .add("user_id", user_id)
+                .add("month", month)
+                .add("year", year)
                 .build();
         Request request = new Request.Builder().url(url).post(formBody).build();
         client.newCall(request).enqueue(new Callback() {
