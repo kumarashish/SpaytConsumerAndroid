@@ -139,6 +139,28 @@ public static JSONArray getJSonArray(String value)
     }
     return null;
 }
+
+    public static JSONObject getTimers(String value) {
+        try {
+            JSONObject jsonObject = new JSONObject(value);
+            return jsonObject.getJSONObject("users_timer");
+        } catch (Exception ex) {
+            ex.fillInStackTrace();
+        }
+        return null;
+    }
+
+    public static JSONObject getLocationDetails(String value) {
+        try {
+            JSONObject jsonObject = new JSONObject(value);
+            JSONArray jsonArray = jsonObject.getJSONArray("Location Details");
+
+            return jsonArray.getJSONObject(0);
+        } catch (Exception ex) {
+            ex.fillInStackTrace();
+        }
+        return null;
+    }
     public static JSONArray getLocationsArray(String value)
     {
         try{
@@ -174,5 +196,16 @@ public static JSONArray getJSonArray(String value)
             ex.fillInStackTrace();
         }
         return "";
+    }
+
+    public static String getTotalParkingAmount(String value) {
+        try{
+            JSONObject jsonObject=new JSONObject(value);
+            return jsonObject.getString("total_parking_fees");
+        }catch (Exception ex)
+        {
+            ex.fillInStackTrace();
+        }
+        return null;
     }
 }

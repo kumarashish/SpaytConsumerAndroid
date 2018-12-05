@@ -153,7 +153,7 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
     public void onClick(View view) {
         switch (view.getId())
         {
-            case      R.id.personalInfo:
+            case    R.id.personalInfo:
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
                 break;

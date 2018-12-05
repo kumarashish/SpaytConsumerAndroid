@@ -55,6 +55,8 @@ import fragments.Aroundme;
 import fragments.Home;
 import fragments.Loyality;
 import fragments.Offers;
+import models.LocationDetails;
+import models.UserTimers;
 import okhttp3.internal.Util;
 import utils.Utils;
 
@@ -106,24 +108,34 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
                 if(Utils.isNetworkAvailable(DashBoard.this))
                 {
                 //String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,controller.getProfile().getUser_id());
-                    String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,"68");
-                boolean[] status=Utils.isTimerStarted(response);
+                    final String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,"68");
+                    final boolean[] status=Utils.isTimerStarted(response);
 
-                if(status.length>0)
-                {
-                    if(status[0]==true)
-                    {
-                        if(status[1]==true)
-                        {
-                            if(status[2]==false)
-                            {
-                                /////navigate to payment page
-                                Utils.showToast(DashBoard.this,"Navigate to payment page");
+                if(status.length>0) {
+                    if (status[0] == true) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (status[1] == true) {
+                                    if (status[2] == false) {
+                                        Intent in = new Intent(DashBoard.this, PaymentPage.class);
+                                        PaymentPage.locationDetails = new LocationDetails(Utils.getLocationDetails(response));
+                                        PaymentPage.timers = new UserTimers(Utils.getTimers(response));
+                                        in.putExtra("pendingamount", Utils.getTotalParkingAmount(response));
+                                        startActivity(in);
+                                        /////navigate to payment page
+
+                                    }
+                                } else {
+                                    /////navigate to payment page running timer
+                                    Intent in = new Intent(DashBoard.this, TimerClass.class);
+                                    TimerClass.timers = new UserTimers(Utils.getTimers(response));
+                                    startActivity(in);
+                                }
                             }
-                        }else {
-                            /////navigate to payment page running timer
-                            Utils.showToast(DashBoard.this,"Navigate to running timer");
-                        }
+
+                        });
+
                     }
                 }
                 Log.d("response",response);
