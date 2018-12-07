@@ -1,9 +1,14 @@
 package com.spaytconsumer;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +36,8 @@ public class PaymentPage  extends Activity {
     TextView endTime;
     @BindView(R.id.totalamount)
     TextView amount;
+    @BindView(R.id.pay_now)
+    Button paynow;
 String totalFees="";
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +45,16 @@ String totalFees="";
         setContentView(R.layout.payment_page);
         controller = (AppController) getApplicationContext();
         ButterKnife.bind(this);
+//        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) &&(Build.VERSION.SDK_INT <26)) {
+//            Window w = getWindow(); // in Activity's onCreate() for instance
+//            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//
+//        }else if(Build.VERSION.SDK_INT >=26){
+//            Window w = getWindow(); // in Activity's onCreate() for instance
+//            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) paynow.getLayoutParams();
+//            params.bottomMargin=120;
+//        }
         totalFees=getIntent().getStringExtra("pendingamount");
         updateUI();
     }

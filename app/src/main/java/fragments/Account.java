@@ -89,6 +89,7 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
         ruchnungen.setOnClickListener(this);
         back.setOnClickListener(this);
         back2.setOnClickListener(this);
+        setMonthsIngerman();
 
         jan.setOnClickListener(this);
         feb.setOnClickListener(this);
@@ -125,6 +126,22 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
             }
         });
         return view;
+    }
+
+    public void setMonthsIngerman()
+    {
+        jan.setText("Januar");
+        feb.setText("Februar");
+        march.setText("März");
+
+        may.setText("Kann");
+        june.setText("Juni");
+        july.setText("Juli");
+
+
+        oct.setText("Oktober");
+
+        dec.setText("Dezember");
     }
 
     public JSONObject upDateProfileJSON() {

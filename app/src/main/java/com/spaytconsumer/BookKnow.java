@@ -3,10 +3,14 @@ package com.spaytconsumer;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,6 +69,16 @@ public class BookKnow extends Activity implements View.OnClickListener, WebApiRe
         setContentView(R.layout.booknow);
         controller=(AppController) getApplicationContext();
         ButterKnife.bind(this);
+//        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) &&(Build.VERSION.SDK_INT <26)) {
+//            Window w = getWindow(); // in Activity's onCreate() for instance
+//            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//
+//        }else if(Build.VERSION.SDK_INT >=26){
+//            Window w = getWindow(); // in Activity's onCreate() for instance
+//            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)booknow.getLayoutParams();
+//            params.bottomMargin=120;
+//        }
         booknow.setOnClickListener(this);
         back.setOnClickListener(this);
         openingHourTv.setOnClickListener(this);
