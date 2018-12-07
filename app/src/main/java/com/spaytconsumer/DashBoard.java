@@ -118,10 +118,9 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
                             public void run() {
                                 if (status[1] == true) {
                                     if (status[2] == false) {
-                                        Intent in = new Intent(DashBoard.this,TimerClass.class);
+                                        Intent in = new Intent(DashBoard.this,PaymentPage.class);
                                         PaymentPage.locationDetails = new LocationDetails(Utils.getLocationDetails(response));
                                         PaymentPage.timers = new UserTimers(Utils.getTimers(response));
-                                        TimerClass.timers = new UserTimers(Utils.getTimers(response));
                                         in.putExtra("pendingamount", Utils.getTotalParkingAmount(response));
 
                                         startActivity(in);
