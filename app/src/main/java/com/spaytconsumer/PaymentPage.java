@@ -1,10 +1,12 @@
 package com.spaytconsumer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,9 +14,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.api.dropin.DropInActivity;
+import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.exceptions.InvalidArgumentException;
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
+import com.braintreepayments.api.models.GooglePaymentRequest;
+import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.google.android.gms.wallet.WalletConstants;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import common.AppController;
+import lib.android.paypal.com.magnessdk.Environment;
 import models.LocationDetails;
 import models.UserTimers;
 
@@ -22,7 +35,7 @@ import models.UserTimers;
  * Created by ashish.kumar on 05-12-2018.
  */
 
-public class PaymentPage  extends Activity {
+public class PaymentPage  extends Activity{
     AppController controller;
     public static LocationDetails locationDetails=null;
     public static UserTimers timers=null;
@@ -39,6 +52,9 @@ public class PaymentPage  extends Activity {
     @BindView(R.id.pay_now)
     Button paynow;
 String totalFees="";
+int  REQUEST_CODE=33;
+    //private static BraintreeGateway gateway = new BraintreeGateway(Environment.SANDBOX, "cdfnmm4xdrs95nsh", "h8522t5v68rttkf6", "54906a99c3d32c0a927688fc0eae1e21"
+   
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +73,7 @@ String totalFees="";
 //        }
         totalFees=getIntent().getStringExtra("pendingamount");
         updateUI();
+        intialize();
     }
     public void updateUI()
     {
@@ -78,4 +95,43 @@ String totalFees="";
         locationDetails=null;
         super.onDestroy();
     }
+
+    public void intialize() {
+        DropInRequest dropInRequest = new DropInRequest()
+                .clientToken("sandbox_vqbwrqs6_cdfnmm4xdrs95nsh")
+               .amount("1.00")
+                .requestThreeDSecureVerification(true);
+        startActivityForResult(dropInRequest.getIntent(this), REQUEST_CODE);
+
+
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                // use the result to update your UI and send the payment method nonce to your server
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // the user canceled
+            } else {
+                // handle errors here, an exception may be available in
+                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                error.fillInStackTrace();
+            }
+        }
+    }
+//    private void enableGooglePay(DropInRequest dropInRequest) {
+//        GooglePaymentRequest googlePaymentRequest = new GooglePaymentRequest()
+//                .transactionInfo(TransactionInfo.newBuilder()
+//                        .setTotalPrice("1.00")
+//                        .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
+//                        .setCurrencyCode("USD")
+//                        .build())
+//                .billingAddressRequired(true); // We recommend collecting and passing billing address information with all Google Pay transactions as a best practice.
+//
+//        dropInRequest.googlePaymentRequest(googlePaymentRequest);
+//    }
 }
