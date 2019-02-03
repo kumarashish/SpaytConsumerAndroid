@@ -182,8 +182,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
-            android:focusable="false"
+            android:focusable="true"
             android:id="@+id/carPlateNumber"
+            android:textCursorDrawable="@null"
             android:text=""
             android:textSize="16dp"
             android:layout_marginBottom="10dp"

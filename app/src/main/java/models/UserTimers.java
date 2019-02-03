@@ -13,6 +13,7 @@ public class UserTimers {
     String business_location_id;
     String start_time;
     String end_time;
+    String id="";
 
     public UserTimers(JSONObject jobject)
     {
@@ -22,6 +23,7 @@ public class UserTimers {
             business_location_id=jobject.isNull("business_location_id")?"":jobject.getString("business_location_id");
             start_time=jobject.isNull("start_time")?"":jobject.getString("start_time");
             end_time=jobject.isNull("end_time")?"":jobject.getString("end_time");
+            id=jobject.isNull("id")?"":jobject.getString("id");
         }catch (Exception ex)
         {
             ex.fillInStackTrace();
@@ -46,5 +48,9 @@ public class UserTimers {
 
     public String getBusiness_location_id() {
         return business_location_id;
+    }
+
+    public String getId() {
+        return id;
     }
 }

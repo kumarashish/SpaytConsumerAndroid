@@ -56,6 +56,7 @@ import fragments.Home;
 import fragments.Loyality;
 import fragments.Offers;
 import models.LocationDetails;
+import models.OrderDetailsModel;
 import models.UserTimers;
 import okhttp3.internal.Util;
 import utils.Utils;
@@ -107,8 +108,8 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
             public void run() {
                 if(Utils.isNetworkAvailable(DashBoard.this))
                 {
-                //String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,controller.getProfile().getUser_id());
-                    final String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,"68");
+            final String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,controller.getProfile().getUser_id());
+              //  final String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,"68");
                     final boolean[] status=Utils.isTimerStarted(response);
 
                 if(status.length>0) {
@@ -122,8 +123,8 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
                                         PaymentPage.locationDetails = new LocationDetails(Utils.getLocationDetails(response));
                                         PaymentPage.timers = new UserTimers(Utils.getTimers(response));
                                         in.putExtra("pendingamount", Utils.getTotalParkingAmount(response));
-
                                         startActivity(in);
+                                        finish();
                                         /////navigate to payment page
 
                                     }

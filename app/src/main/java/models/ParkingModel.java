@@ -88,10 +88,12 @@ public class ParkingModel {
     public void setBusinessDetails(String result) {
         try {
             JSONObject jsonObject = new JSONObject(result);
+            JSONArray locationDetails = jsonObject.getJSONArray("Location Details");
             JSONArray openingHourArray = jsonObject.getJSONArray("Opening Hours");
             JSONArray parkingArray = jsonObject.getJSONArray("Parking Fees");
             parking_fees = new Parking_Fees(parkingArray.getJSONObject(0));
             opening_hours = new Opening_Hours(openingHourArray.getJSONObject(0));
+            setBusinessLocationId(locationDetails.getJSONObject(0));
         } catch (Exception ex) {
             ex.fillInStackTrace();
         }
@@ -210,6 +212,7 @@ public class ParkingModel {
            }
         }
 
+
         public String getMaximum_parking_fees() {
             return maximum_parking_fees;
         }
@@ -221,5 +224,13 @@ public class ParkingModel {
         public String getParking_fee_per_hour() {
             return parking_fee_per_hour;
         }
+    }
+    public void setBusinessLocationId(JSONObject jsonObject)
+    {try{
+        business_id=jsonObject.getString("id");
+    }catch (Exception ex)
+    {
+        ex.fillInStackTrace();
+    }
     }
 }

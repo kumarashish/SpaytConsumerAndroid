@@ -1,6 +1,7 @@
 package com.spaytconsumer;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +27,11 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import common.AppController;
+import common.Common;
+import intefaces.WebApiResponseCallback;
+import models.LocationDetails;
 import models.UserTimers;
+import utils.Utils;
 
 import static com.facebook.internal.Utility.logd;
 
@@ -34,7 +39,7 @@ import static com.facebook.internal.Utility.logd;
  * Created by ashish.kumar on 05-12-2018.
  */
 
-public class TimerClass extends Activity implements View.OnClickListener {
+public class TimerClass extends Activity implements View.OnClickListener , WebApiResponseCallback {
     AppController controller;
     private final int interval = 1000; // 1 Second
     int duration=0;
@@ -49,6 +54,7 @@ public class TimerClass extends Activity implements View.OnClickListener {
     int second=0;
     Timer t;
     int day=0;
+    Dialog dailog;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,15 +155,56 @@ public class TimerClass extends Activity implements View.OnClickListener {
             }
         });
     }
+    public void updateTimerStatus()
+    {
+        dailog=Utils.showPogress(TimerClass.this);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss a");
+        controller.getApiCall().postData(Common.getStartedTimerUrl,Common.afterTimerStartKeys,new String[]{"true","true","false",timers.getBusiness_location_id(),timers.getStart_time(),dateFormat.format(System.currentTimeMillis()),controller.getProfile().getUser_id(),"","",timers.getId()},TimerClass.this);
 
+
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.stop_timer:
-                startActivity(new Intent(this, PaymentPage.class));
-                finish();
+                updateTimerStatus();
                 break;
         }
+    }
+
+    @Override
+    public void onSucess(final String value) {
+
+if(Utils.getStatus(value)==true)
+{
+    runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+            Intent in = new Intent(TimerClass.this,PaymentPage.class);
+            PaymentPage.locationDetails = new LocationDetails(Utils.getLocationDetails(value));
+            PaymentPage.timers = new UserTimers(Utils.getTimers(value));
+            in.putExtra("pendingamount", Utils.getTotalParkingAmount(value));
+            startActivity(in);
+            finish();
+        }
+    });
+
+}else{
+    if(dailog!=null)
+    {
+        dailog.cancel();
+    }
+    Utils.showToast(TimerClass.this,Utils.getMessage(value));
+}
+    }
+
+    @Override
+    public void onError(String value) {
+        if(dailog!=null)
+        {
+            dailog.cancel();
+        }
+        Utils.showToast(TimerClass.this,Utils.getMessage(value));
     }
 
 
@@ -177,4 +224,10 @@ public class TimerClass extends Activity implements View.OnClickListener {
         timers=null;
         super.onDestroy();
     }
+
+
+    /*
+    NSDictionary *params = @ {@"IsTimerStarted" : _IsTimerStarted, @"IsTimerStoped" : _IsTimerStoped, @"IsPaymentDone" : _IsPaymentDone,
+        @"business_location_id" : nearByObject->location_Id , @"start_time" : startTime, @"end_time" : _endTime, @"user_id" : [Global sharedInstance]->currentUserDetails->userID, @"amount" : _amount, @"parking_carplate_no" : vehicleNumberTF.text, @"timer_id" : timerIdString};
+     */
 }

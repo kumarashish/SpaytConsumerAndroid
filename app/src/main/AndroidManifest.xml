@@ -54,6 +54,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".PaymentPage"
             android:screenOrientation="portrait"/>
+        <activity android:name=".Sucess"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -65,15 +67,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="com.spaytconsumer.braintree" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

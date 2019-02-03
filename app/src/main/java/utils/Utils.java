@@ -22,6 +22,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,15 +57,21 @@ public class Utils {
         boolean status = false;
         try {
             JSONObject jsonObject = new JSONObject(data);
-            int code = jsonObject.getInt("code");
-            if (code == 200) {
-                return true;
+            if(jsonObject.isNull("Status")) {
+                int code = jsonObject.getInt("code");
+                if (code == 200) {
+                    return true;
+                }
+            }else{
+                return jsonObject.getBoolean("Status");
             }
         } catch (Exception ex) {
+
             ex.fillInStackTrace();
         }
         return status;
     }
+
     public static void showToast(final Activity act, final String message) {
         act.runOnUiThread(new Runnable() {
             @Override
@@ -82,6 +92,19 @@ public class Utils {
         return message;
     }
     public static Dialog showPogress(Activity act) {
+        final Dialog dialog = new Dialog(act);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.loader);
+        final Window window = dialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        dialog.show();
+        return dialog;
+    }
+    public static Dialog showBluePogress(Activity act) {
         final Dialog dialog = new Dialog(act);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -208,4 +231,52 @@ public static JSONArray getJSonArray(String value)
         }
         return null;
     }
+
+    public static String getParkingDuration(String start_time, String end_time) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss a");
+        int day=0;
+        int hour=00;
+        int  minute=00;
+        int second=00;
+        try {
+
+            Date date1=dateFormat.parse(start_time);
+            Date date2=dateFormat.parse(end_time);
+            long miliseconds=date1.getTime();
+
+            long  difference=(date2.compareTo(date1))/1000;
+            hour  = (int) (difference )/3600;
+            long val=difference%3600;
+          minute=(int)val/60;
+            second=(int)val%60;
+
+            if(hour>24)
+            {
+               day=(int )hour/24;
+                hour=hour%24;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if(day>0)
+        {
+            return day+"d"+":"+hour+":"+minute+":"+second;
+        }else{
+            return hour+":"+minute+":"+second;
+        }
+
+    }
+public static String getPaymentId(String value)
+{
+    try{
+        JSONObject jsonObject=new JSONObject(value);
+        JSONObject response=jsonObject.getJSONObject("response");
+        return response.getString("id");
+    }catch (Exception ex)
+    {
+        ex.fillInStackTrace();
+    }
+    return "";
+}
 }

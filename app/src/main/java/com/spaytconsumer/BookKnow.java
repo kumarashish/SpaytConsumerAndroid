@@ -3,6 +3,7 @@ package com.spaytconsumer;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -17,8 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.BatchUpdateException;
+import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +29,7 @@ import common.AppController;
 import common.Common;
 import intefaces.WebApiResponseCallback;
 import models.ParkingModel;
+import models.UserTimers;
 import utils.Utils;
 
 /**
@@ -127,7 +131,13 @@ public class BookKnow extends Activity implements View.OnClickListener, WebApiRe
                 finish();
                 break;
             case R.id.booknow:
-                Utils.showToast(BookKnow.this,"UnderDevelopment");
+
+                if(carPlateNumber.getText().length()>0) {
+                    updateTimerStatus();
+                }else{
+                    Toast.makeText(BookKnow.this,"Please enter car plate number",Toast.LENGTH_SHORT).show();
+                }
+
                     break;
             case R.id.openingHours_icon:
             case R.id.openingHours_tv:
@@ -142,16 +152,42 @@ public class BookKnow extends Activity implements View.OnClickListener, WebApiRe
         }
 
     }
+    public void updateTimerStatus()
+    {
+        dailog=Utils.showPogress(BookKnow.this);
+        Apicall=bookNow;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss a");
+        controller.getApiCall().postData(Common.getStartedTimerUrl,Common.afterTimerStartKeys,new String[]{"true","false","false",model.getBusiness_id(),dateFormat.format(System.currentTimeMillis()),"",controller.getProfile().getUser_id(),"",carPlateNumber.getText().toString(),""},BookKnow.this);
 
+
+    }
     @Override
-    public void onSucess(String value) {
-
-if(value.length()>60)
+    public void onSucess(final String value) {
+if(Apicall==bookNow)
 {
-    model.setBusinessDetails(value);
-    updateUI();
-}else{
-    Utils.showToast(BookKnow.this,"Business details not available");
+  if(Utils.getStatus(value))
+  {
+      runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+              Intent in = new Intent(BookKnow.this, TimerClass.class);
+              TimerClass.timers = new UserTimers(Utils.getTimers(value));
+              startActivity(in);
+              finish();
+
+          }
+      });
+
+  }else{
+      Utils.showToast(BookKnow.this, Utils.getMessage(value));
+  }
+}else {
+    if (value.length() > 60) {
+        model.setBusinessDetails(value);
+        updateUI();
+    } else {
+        Utils.showToast(BookKnow.this, "Business details not available");
+    }
 }
         if(dailog!=null)
         {
