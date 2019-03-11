@@ -26,6 +26,8 @@ public class Common {
     public static String getInvoices=baseUrl+"get_invoices";
     public static String getStartedTimerUrl=baseUrl+"AfterTimerStart";
     public static String getUpdateOrder=baseUrl+"consumers_orders";
+    public static String getQRCode=baseUrl+"/get_my_qrcode";
+
     //public static String getInvoices=baseUrl+"get_invoices";
 
     public static String[]afterTimerStartKeys={"IsTimerStarted","IsTimerStoped","IsPaymentDone","business_location_id","start_time","end_time","user_id","amount","parking_carplate_no" ,"timer_id"};

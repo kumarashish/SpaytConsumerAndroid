@@ -74,7 +74,35 @@ public class WebApiCall {
             }
         });
     }
+    public void getData(String url,String headerToken, final WebApiResponseCallback callback) {
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS).build();
+        final Request request = new Request.Builder().header("X-Consumertoken",headerToken).url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onError(e.fillInStackTrace().toString());
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    if (response != null) {
+                        callback.onSucess(response.body().string());
+                    } else {
+                        if (response.message() != null) {
+                            callback.onError(response.message());
+                        } else {
+                            callback.onError("No data found!");
+                        }
 
+                    }
+                }else{
+                    callback.onError(response.body().string());
+                }
+            }
+        });
+    }
     public String getData(String url) {
         OkHttpClient client = new OkHttpClient();
         client.newBuilder().connectTimeout(60000, TimeUnit.MILLISECONDS).readTimeout(60000, TimeUnit.MILLISECONDS).build();

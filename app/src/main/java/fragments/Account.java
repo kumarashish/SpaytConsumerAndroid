@@ -49,7 +49,7 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
     AppController controller;
     Dialog dialog;
     int apiCall=0;
-    int updateProfile=1,getInvoice=2;
+    int updateProfile=1,getInvoice=2,getQRCode=3;
     int currentYear=2018;
     ArrayList<OrderDetailsModel>orderList=new ArrayList<>();
     @Override
@@ -173,6 +173,11 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
             case    R.id.personalInfo:
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
+                if(Utils.isNetworkAvailable(getActivity()))
+                {   apiCall=getQRCode;
+                    dialog=Utils.showPogress(getActivity());
+                    controller.getApiCall().getData(Common.getQRCode,Account.this);
+                }
                 break;
             case      R.id.ruchnungen:
                 Calendar c = Calendar.getInstance();
