@@ -2,21 +2,33 @@ package fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.google.zxing.WriterException;
 import com.spaytconsumer.R;
+import com.squareup.picasso.Picasso;
+
+import net.glxn.qrgen.core.image.ImageType;
+import net.glxn.qrgen.javase.QRCode;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,12 +37,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import adapter.Invoices_ListAdapter;
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
 import common.AppController;
 import common.Common;
 import intefaces.WebApiResponseCallback;
 import models.OrderDetailsModel;
 import models.UserProfile;
 import utils.Utils;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by ashish.kumar on 30-10-2018.
@@ -52,6 +68,10 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
     int updateProfile=1,getInvoice=2,getQRCode=3;
     int currentYear=2018;
     ArrayList<OrderDetailsModel>orderList=new ArrayList<>();
+    ImageView qrCode;
+    String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
+    Bitmap bitmap;
+    QRGEncoder qrgEncoder;
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,6 +89,7 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
         lname.setText(controller.getProfile().getLast_name());
         fname.setSelection(controller.getProfile().getFirst_name().length());
         lname.setSelection(controller.getProfile().getLast_name().length());
+        qrCode=(ImageView)view.findViewById(R.id.qrCode);
         jan=(TextView)view.findViewById(R.id.jan);
         feb=(TextView)view.findViewById(R.id.feb);
         march=(TextView)view.findViewById(R.id.mar);
@@ -125,9 +146,34 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
                 return false;
             }
         });
+
+        setQRCode("This is spaytConsumer");
         return view;
     }
+public void setQRCode(String inputValue)
+{
+//    WindowManager manager = (WindowManager)getActivity(). getSystemService(WINDOW_SERVICE);
+//    Display display = manager.getDefaultDisplay();
+//    Point point = new Point();
+//    display.getSize(point);
+//    int width = point.x;
+//    int height = point.y;
+//    int smallerDimension = width < height ? width : height;
+//    smallerDimension = smallerDimension * 3 / 4;
+//
+//    qrgEncoder = new QRGEncoder(
+//            inputValue, null,
+//            QRGContents.Type.TEXT,
+//            smallerDimension);
+//    try {
+//        bitmap = qrgEncoder.encodeAsBitmap();
+//        qrCode.setImageBitmap(bitmap);
+//    } catch (WriterException e) {
+//        Log.v("TAG", e.toString());
+//    }
 
+    Picasso.with(getActivity()).load("https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=thisisashish").placeholder( R.drawable.progress_drawable ).error(android.R.drawable.stat_notify_error).into(qrCode);
+}
     public void setMonthsIngerman()
     {
         jan.setText("Januar");
@@ -173,11 +219,11 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
             case    R.id.personalInfo:
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
-                if(Utils.isNetworkAvailable(getActivity()))
-                {   apiCall=getQRCode;
-                    dialog=Utils.showPogress(getActivity());
-                    controller.getApiCall().getData(Common.getQRCode,Account.this);
-                }
+//                if(Utils.isNetworkAvailable(getActivity()))
+//                {   apiCall=getQRCode;
+//                    dialog=Utils.showPogress(getActivity());
+//                    controller.getApiCall().getData(Common.getQRCode,Account.this);
+//                }
                 break;
             case      R.id.ruchnungen:
                 Calendar c = Calendar.getInstance();

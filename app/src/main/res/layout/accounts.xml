@@ -407,7 +407,15 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/rounded_corner_box"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" /></LinearLayout>
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+            <ImageView
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:id="@+id/qrCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 <View
     android:layout_width="match_parent"
     android:layout_height="10dp"/>
