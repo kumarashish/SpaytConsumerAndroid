@@ -71,6 +71,29 @@ public class Utils {
         }
         return status;
     }
+    public static String getQRUrl(String data) {
+
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+          return jsonObject.getString("qrurl");
+        } catch (Exception ex) {
+
+            ex.fillInStackTrace();
+        }
+        return "";
+    }
+
+    public static JSONObject getJSONObject(String data,String key) {
+
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            return jsonObject.getJSONObject(key);
+        } catch (Exception ex) {
+
+            ex.fillInStackTrace();
+        }
+        return null;
+    }
 
     public static void showToast(final Activity act, final String message) {
         act.runOnUiThread(new Runnable() {

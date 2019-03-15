@@ -69,9 +69,7 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
     int currentYear=2018;
     ArrayList<OrderDetailsModel>orderList=new ArrayList<>();
     ImageView qrCode;
-    String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
-    Bitmap bitmap;
-    QRGEncoder qrgEncoder;
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
@@ -124,6 +122,7 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
         oct.setOnClickListener(this);
         nov.setOnClickListener(this);
         dec.setOnClickListener(this);
+        getQRCode();
         lname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
@@ -147,8 +146,20 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
             }
         });
 
-        setQRCode("This is spaytConsumer");
+
         return view;
+    }
+
+
+    public void getQRCode()
+    {
+        if(Utils.isNetworkAvailable(getActivity()))
+        {
+            apiCall=getQRCode;
+            dialog=Utils.showPogress(getActivity());
+            controller.getApiCall().getData(Common.getQRCode,controller.getPrefManager().getUserToken(),Account.this);
+        }
+
     }
 public void setQRCode(String inputValue)
 {
@@ -480,7 +491,7 @@ public void setQRCode(String inputValue)
     }
 
     @Override
-    public void onSucess(String value) {
+    public void onSucess(final String value) {
 
             switch (apiCall) {
                 case 1:
@@ -521,6 +532,27 @@ public void setQRCode(String inputValue)
                     }else{
                         invoices_list.setVisibility(View.GONE);
                         Utils.showToast(getActivity(),"No record found");
+                    }
+                    break;
+                case 3:
+                    if(   utils.Utils.getStatus(value)) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String qrUrl=Utils.getQRUrl(value);
+                                if(qrUrl.length()>0) {
+                                    Picasso.with(getActivity()).load(qrUrl).placeholder( R.drawable.progress_drawable ).error(android.R.drawable.stat_notify_error).into(qrCode);
+//                                    controller.setProfile(new UserProfile(Utils.getJSONObject(value,"consumer_details")));
+//                                    fname.setText(controller.getProfile().getFirst_name());
+//                                    lname.setText(controller.getProfile().getLast_name());
+//                                    fname.setSelection(controller.getProfile().getFirst_name().length());
+//                                    lname.setSelection(controller.getProfile().getLast_name().length());
+
+                                }
+                            }
+                        });
+                    }else {
+                        utils.Utils.showToast(getActivity(), utils.Utils.getMessage(value));
                     }
                     break;
             }

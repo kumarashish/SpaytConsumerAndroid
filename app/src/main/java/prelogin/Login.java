@@ -200,6 +200,7 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
         if ((utils.Utils.getStatus(value))||utils.Utils.getMessage(value).equalsIgnoreCase("Email already in use")) {
              controller.setProfile(new UserProfile(value));
              controller.getPrefManager().setUserLoggedIn(true);
+             controller.getPrefManager().setUserToken(value);
             utils.Utils.showToast(this, "Logged in sucessfully.");
            startActivity(new Intent(this, DashBoard.class));
            finish();

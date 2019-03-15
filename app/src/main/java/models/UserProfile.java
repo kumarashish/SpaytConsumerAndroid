@@ -11,14 +11,30 @@ public class UserProfile {
     String first_name="";
     String last_name="";
     String user_id="";
+    String email="";
 
     public UserProfile(String value)
     {
         try{
-            JSONObject jsonObject=new JSONObject(value);
-            first_name=jsonObject.isNull("first_name")?jsonObject.getString("username"):jsonObject.getString("first_name");
+            JSONObject jsonObject1=new JSONObject(value);
+            JSONObject jsonObject=jsonObject1.getJSONObject("consumer_details");
+            first_name=jsonObject.isNull("first_name")?"":jsonObject.getString("first_name");
             last_name=jsonObject.isNull("last_name")?"":jsonObject.getString("last_name");
-            user_id=jsonObject.isNull("user_id")?"":jsonObject.getString("user_id");
+            user_id=jsonObject.isNull("consumer_id")?"":jsonObject.getString("consumer_id");
+            email=jsonObject.isNull("email")?"":jsonObject.getString("email");
+        }catch (Exception ex)
+        {
+            ex.fillInStackTrace();
+        }
+    }
+    public UserProfile(JSONObject jsonObject)
+    {
+        try{
+
+            first_name=jsonObject.isNull("first_name")?"":jsonObject.getString("first_name");
+            last_name=jsonObject.isNull("last_name")?"":jsonObject.getString("last_name");
+            user_id=jsonObject.isNull("consumer_id")?"":jsonObject.getString("consumer_id");
+            email=jsonObject.isNull("email")?"":jsonObject.getString("email");
         }catch (Exception ex)
         {
             ex.fillInStackTrace();
@@ -44,5 +60,9 @@ public class UserProfile {
 
     public String getUser_id() {
         return user_id;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

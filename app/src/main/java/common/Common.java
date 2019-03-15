@@ -26,7 +26,7 @@ public class Common {
     public static String getInvoices=baseUrl+"get_invoices";
     public static String getStartedTimerUrl=baseUrl+"AfterTimerStart";
     public static String getUpdateOrder=baseUrl+"consumers_orders";
-    public static String getQRCode=baseUrl+"/get_my_qrcode";
+    public static String getQRCode=baseUrlNew+"get_my_qrcode";
 
     //public static String getInvoices=baseUrl+"get_invoices";
 
