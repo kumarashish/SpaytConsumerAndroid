@@ -542,12 +542,6 @@ public void setQRCode(String inputValue)
                                 String qrUrl=Utils.getQRUrl(value);
                                 if(qrUrl.length()>0) {
                                     Picasso.with(getActivity()).load(qrUrl).placeholder( R.drawable.progress_drawable ).error(android.R.drawable.stat_notify_error).into(qrCode);
-//                                    controller.setProfile(new UserProfile(Utils.getJSONObject(value,"consumer_details")));
-//                                    fname.setText(controller.getProfile().getFirst_name());
-//                                    lname.setText(controller.getProfile().getLast_name());
-//                                    fname.setSelection(controller.getProfile().getFirst_name().length());
-//                                    lname.setSelection(controller.getProfile().getLast_name().length());
-
                                 }
                             }
                         });
