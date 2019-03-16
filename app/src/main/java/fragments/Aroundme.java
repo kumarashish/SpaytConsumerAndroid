@@ -121,8 +121,8 @@ public class Aroundme  extends Fragment  implements View.OnClickListener, WebApi
         if (Utils.isNetworkAvailable(getActivity())) {
             apiCall = getNearBYLocation;
             progressDailog = Utils.showPogress(getActivity());
-            //  controller.getApiCall().getData(Common.getGetLocationByDistance(controller.getAroundMe().latitude,controller.getAroundMe().longitude,10),Aroundme.this);
-            controller.getApiCall().getData("https://api.spayt.de/user/distance_by_km?latitude=52.520006599999995&longitude=13.404954&distance="+range,Aroundme.this);
+            controller.getApiCall().getData(Common.getGetLocationByDistance(controller.getAroundMe().latitude,controller.getAroundMe().longitude,10),Aroundme.this);
+           // controller.getApiCall().getData("https://api.spayt.de/user/distance_by_km?latitude=52.520006599999995&longitude=13.404954&distance="+range,Aroundme.this);
 
         }
     }
