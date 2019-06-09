@@ -37,10 +37,11 @@ public class Common {
     public static String userIdKey="user_id";
     public static String idKey="id";
 
-    public static String paypalClientId="ATEDn8H26GtM_VpLMrIWrTwvJCxc6d_xWNa0W34PL9FqLwEg41FRrjlLZppbhR_ShSG50ztPZ6bpPBXz";
-    public static String paypalClientSecret="EF0a3sqSFCDwlYmpiTGhJNrEapL_qi2Gdktsh5lOhJTtMoxuDdgkjK-BcoKJeznwYrEegLRpHwh5fTgB";
+    public static String paypalClientIdSanbox="ATEDn8H26GtM_VpLMrIWrTwvJCxc6d_xWNa0W34PL9FqLwEg41FRrjlLZppbhR_ShSG50ztPZ6bpPBXz";
+    public static String paypalClientSecretSanbox="EF0a3sqSFCDwlYmpiTGhJNrEapL_qi2Gdktsh5lOhJTtMoxuDdgkjK-BcoKJeznwYrEegLRpHwh5fTgB";
 
-
+    public static String paypalClientIdLive="AWjXaMC3FMmr70GbAEHKVpCXQQ5XyZ745RQ-yFq_2Vu7E-AEog9xi_XokV0De0CJr2Q_QlWzannKEQzp";
+    public static String paypalClientSecretLive="EEMUpvzO1MwUT8k7qUyhFViS0TINM-qUh5bLnyI6pz5GudwBFlE50roQHK3CK-NwpoaQwpg1H9x8Fu4n";
 
 
     public static String getRegisterUrl( String fname, String lname, String email, String password)
