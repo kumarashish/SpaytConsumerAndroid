@@ -90,7 +90,7 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
         {
             dailog=Utils.showPogress(GetOutstandingOrderDetails.this);
             apiCall=getOrderDetails;
-            controller.getApiCall().postData(Common.getOutstandingOrderDetails,controller.getPrefManager().getUserToken(),new String[]{Common.idKey},new String[]{orderId},GetOutstandingOrderDetails.this);
+            controller.getApiCall().postData(Common.getOutstandingOrder,controller.getPrefManager().getUserToken(),new String[]{Common.idKey},new String[]{orderId},GetOutstandingOrderDetails.this);
         }
 
 
@@ -129,6 +129,8 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
         }
         totalPayableAmout=Double.toString(amount);
         grandTotal.setText(Double.toString( amount)+" £");
+        if(dailog!=null)
+        {dailog.cancel();}
     }
 
     @Override
