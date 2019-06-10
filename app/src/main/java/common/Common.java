@@ -6,11 +6,11 @@ package common;
 
 public class Common {
     public static String baseUrl="https://api.spayt.de/user/";
-    public static String baseUrlNew="https://api.spayt.de/consumers/";
+ public static String baseUrlNew="https://api.spayt.de/";
     public static String register=baseUrl+"register?";
     public static String registerWithFb=baseUrl+"facebook_register";
     //public static String loginwithFb=baseUrl+"user/facebook_login";
-    public static String login=baseUrlNew+"login";
+    public static String login=baseUrlNew+"consumers/login";
     public static String forgetPassword=baseUrl+"forgot_password";
     public static String logout=baseUrl+"logout";
     public static String getCategories=baseUrl+"get_categories";
@@ -26,13 +26,15 @@ public class Common {
     public static String getInvoices=baseUrl+"get_invoices";
     public static String getStartedTimerUrl=baseUrl+"AfterTimerStart";
     public static String getUpdateOrder=baseUrl+"consumers_orders";
-    public static String getQRCode=baseUrlNew+"get_my_qrcode";
+    public static String getQRCode=baseUrlNew+"consumers/get_my_qrcode";
+    public static String getOutstandingOrder=baseUrlNew+"order/get_outstanding_consumer_orders";
+    public static String getOutstandingOrderDetails=baseUrlNew+"order/get_outstanding_consumer_orders";
 
     //public static String getInvoices=baseUrl+"get_invoices";
 
     public static String[]afterTimerStartKeys={"IsTimerStarted","IsTimerStoped","IsPaymentDone","business_location_id","start_time","end_time","user_id","amount","parking_carplate_no" ,"timer_id"};
-    public static String [] updatePaymentKeys={"business_location_id","order_id","transactionid","total_fees","user_id","parking_hours","status","parking_carplate_no"};
 
+    public static String [] updatePaymentKeys={"business_location_id","order_id","transactionid","total_fees","user_id","parking_hours","status","parking_carplate_no"};
 
     public static String userIdKey="user_id";
     public static String idKey="id";

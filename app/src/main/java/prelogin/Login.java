@@ -35,6 +35,7 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.spaytconsumer.DashBoard;
 import com.spaytconsumer.R;
 
@@ -85,7 +86,7 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
     int login=1,loginWithFb=2,registerwithFb=3;
     Dialog dialog;
     CallbackManager  callbackManager;
-
+String token;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +111,7 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
         btn_fblogin.setReadPermissions("email", "public_profile");
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().logOut();
-
+        token=  FirebaseInstanceId.getInstance().getToken();
         btn_fblogin.registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
@@ -191,7 +192,7 @@ public class Login extends Activity implements View.OnClickListener, WebApiRespo
         if (utils.Utils.isNetworkAvailable(Login.this)) {
             apiCall = login;
             dialog = utils.Utils.showPogress(this);
-            controller.getApiCall().login(Common.login, edt_email.getText().toString(), edt_password.getText().toString(), utils.Utils.getDeviceID(Login.this), this);
+            controller.getApiCall().login(Common.login, edt_email.getText().toString(), edt_password.getText().toString(), token, this);
         }
     }
 

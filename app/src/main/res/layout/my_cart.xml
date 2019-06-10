@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <RelativeLayout
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <ImageView
+                android:rotation="180"
+                android:layout_centerVertical="true"
+                android:backgroundTint="@android:color/black"
+                android:src="@drawable/go"
+                android:id="@+id/back"
+                android:layout_marginLeft="10dp"
+
+
+                android:layout_width="40dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:gravity="center"
+                android:textStyle="bold"
+android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:text="offene auftragsdaten"
+                android:textAllCaps="true"
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+
+            <LinearLayout
+
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/customer_name"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+
+                    android:textStyle="bold"
+                    android:textSize="18dp"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+
+                    android:textSize="16dp"
+                    android:text=" "
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ScrollView
+                android:layout_marginBottom="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:orientation="vertical"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+
+                        android:layout_marginTop="10dp"
+                        android:weightSum="5"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp">
+
+                        <TextView
+                            android:textSize="12dp"
+
+                            android:paddingLeft="10dp"
+                            android:textColor="@color/darkText"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="PRODUKT"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:textSize="12dp"
+
+                            android:paddingLeft="10dp"
+                            android:textColor="@color/darkText"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="MENGE"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:textSize="12dp"
+
+                            android:paddingLeft="10dp"
+                            android:textColor="@color/darkText"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="DATUM"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:textSize="12dp"
+
+                            android:paddingLeft="10dp"
+                            android:textColor="@color/darkText"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="UST $"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:textSize="12dp"
+
+                            android:paddingLeft="10dp"
+                            android:textColor="@color/darkText"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="BRUTTO $"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent" />
+
+
+                    </LinearLayout>
+                    <View
+                        android:layout_marginTop="5dp"
+                        android:background="@color/darkText"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+
+
+                   <LinearLayout
+                       android:id="@+id/content"
+                       android:orientation="vertical"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"></LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_marginTop="10dp"
+                        android:weightSum="3"
+                        android:orientation="horizontal"
+                        android:background="@color/lightText"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+
+                        <TextView
+                            android:paddingLeft="10dp"
+                            android:textColor="@color/skyblue"
+                            android:layout_weight="1"
+                            android:gravity="left|center_vertical"
+                            android:text="GESAMTBETRAG"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:text=""
+                            android:textColor="@color/skyblue"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:id="@+id/grand_total"
+                            android:text=""
+                            android:textColor="@color/skyblue"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"/>
+                </LinearLayout>
+            </ScrollView>
+            <RelativeLayout
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <Button
+
+                android:id="@+id/pay"
+
+                android:textSize="18dp"
+                android:textColor="@color/white"
+                android:text="Zahlen Sie wissen"
+                android:layout_alignParentBottom="true"
+                android:background="@color/skyblue"
+                android:layout_width="match_parent"
+                android:layout_height="59dp" />
+                <ProgressBar
+                    android:visibility="gone"
+                    android:id="@+id/progressbar2"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+
+
+
+</android.support.constraint.ConstraintLayout>

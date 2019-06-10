@@ -219,6 +219,9 @@
             android:background="@android:color/background_dark"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
         <LinearLayout
             android:weightSum="4"
 
@@ -246,6 +249,11 @@
                 android:layout_weight="0.5"
                 android:layout_height="30dp" />
         </LinearLayout>
+            <View
+                android:id="@+id/profile"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+        </RelativeLayout>
         <View
             android:background="@android:color/background_dark"
             android:layout_width="match_parent"

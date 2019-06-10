@@ -90,6 +90,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
         ButterKnife.bind(this);
+
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) &&(Build.VERSION.SDK_INT <26)) {
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
@@ -102,6 +103,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
         }
 
         controller = (AppController) getApplicationContext();
+       String token=controller.getPrefManager().getUserToken();
         frameLayout=(FrameLayout)content.findViewById(R.id.frame) ;
         Thread t=new Thread(new Runnable() {
             @Override

@@ -348,7 +348,44 @@ public void postFlormData(String url,String key,String userId ,final WebApiRespo
             }
         });
     }
+    public void postData(String url,String header,String []key,String[] values ,final WebApiResponseCallback callback)
+    {
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS).build();
+        HashMap<String, String> params = new HashMap<>();
+        for(int i=0;i<key.length;i++)
+        {
+            params.put(key[i],values[i] );}
+        RequestBody formBody = null;
+        FormBody.Builder builder = new FormBody.Builder();
+// Add Params to Builder
+        for ( Map.Entry<String, String> entry : params.entrySet() ) {
+            builder.add( entry.getKey(), entry.getValue() );
+        }
+        formBody=builder.build();
+        Request request = new Request.Builder().addHeader("X-Consumertoken",header).url(url).post(formBody).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
 
+                callback.onError(e.fillInStackTrace().toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200 || response.code() == 201) {
+                    if (response != null) {
+                        callback.onSucess(response.body().string());
+                    } else {
+                        callback.onError(response.message());
+                    }
+                } else {
+                    callback.onError(response.message());
+                }
+            }
+        });
+    }
     public String postFlormData(String url,String userId)
     {
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)

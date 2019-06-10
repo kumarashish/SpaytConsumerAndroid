@@ -69,14 +69,15 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
     int currentYear=2018;
     ArrayList<OrderDetailsModel>orderList=new ArrayList<>();
     ImageView qrCode;
+   // View profile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.accounts,
-                container, false);
+        View view = inflater.inflate(R.layout.accounts, container, false);
         controller=(AppController)getActivity().getApplicationContext();
         personalInfo=(View)view.findViewById(R.id.personalInfo);
+        //profile=(View)view.findViewById(R.id.profile);
         ruchnungen=(View)view.findViewById(R.id.ruchnungen);
         view1=(LinearLayout)view.findViewById(R.id.view1);
         view2=(LinearLayout)view.findViewById(R.id.view2);
@@ -109,7 +110,6 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
         back.setOnClickListener(this);
         back2.setOnClickListener(this);
         setMonthsIngerman();
-
         jan.setOnClickListener(this);
         feb.setOnClickListener(this);
         march.setOnClickListener(this);
@@ -122,6 +122,7 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
         oct.setOnClickListener(this);
         nov.setOnClickListener(this);
         dec.setOnClickListener(this);
+       // profile.setOnClickListener(this);
         getQRCode();
         lname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -228,6 +229,7 @@ public void setQRCode(String inputValue)
         switch (view.getId())
         {
             case    R.id.personalInfo:
+            //case    R.id.profile:
                 view1.setVisibility(View.GONE);
                 view2.setVisibility(View.VISIBLE);
 //                if(Utils.isNetworkAvailable(getActivity()))
