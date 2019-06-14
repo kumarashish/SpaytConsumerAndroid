@@ -28,7 +28,7 @@ public class Common {
     public static String getUpdateOrder=baseUrl+"consumers_orders";
     public static String getQRCode=baseUrlNew+"consumers/get_my_qrcode";
     public static String getOutstandingOrder=baseUrlNew+"order/get_outstanding_consumer_orders";
-    public static String getOutstandingOrderDetails=baseUrlNew+"order/get_outstanding_consumer_orders";
+    public static String getOutstandingOrderDetails=baseUrlNew+"order/get_consumer_order_details";
 
     //public static String getInvoices=baseUrl+"get_invoices";
 
