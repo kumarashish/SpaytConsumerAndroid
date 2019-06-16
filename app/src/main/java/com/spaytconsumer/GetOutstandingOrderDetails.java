@@ -75,8 +75,8 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
         setContentView(R.layout.my_cart);
         controller=(AppController)getApplicationContext();
         ButterKnife.bind(this);
-       orderId=getIntent().getStringExtra("orderId");
-        //orderId="11";
+      orderId=getIntent().getStringExtra("orderId");
+        //orderId="12";
         back.setOnClickListener(this);
         submit.setOnClickListener(this);
         if(Utils.isNetworkAvailable(GetOutstandingOrderDetails.this))
