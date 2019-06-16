@@ -1,15 +1,10 @@
 package com.spaytconsumer;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,20 +22,16 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import common.AppController;
 import common.Common;
 import intefaces.WebApiResponseCallback;
+
 import models.OutstandingOrderModel;
 import utils.Utils;
 
@@ -62,7 +53,7 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
     String totalPayableAmout="";
     @BindView(R.id.progressbar2)
     ProgressBar progressBar;
-    int getOrderDetails=1;
+    int getOrderDetails=1,updatePaymentStatus=2;
     Dialog dailog;
     private static final String CONFIG_CLIENT_ID = Common.paypalClientIdSanbox;
     private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
@@ -76,14 +67,16 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
             .merchantUserAgreementUri(Uri.parse("https://www.spayt.de"));
     private static final String TAG = "paymentExample";
     OutstandingOrderModel model;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_cart);
         controller=(AppController)getApplicationContext();
         ButterKnife.bind(this);
-       // orderId=getIntent().getStringExtra("orderId");
-        orderId="11";
+       orderId=getIntent().getStringExtra("orderId");
+        //orderId="11";
         back.setOnClickListener(this);
         submit.setOnClickListener(this);
         if(Utils.isNetworkAvailable(GetOutstandingOrderDetails.this))
@@ -100,9 +93,9 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
     public void setValue()
     {
        double amount=0.00;
-       for (int i=0;i<model.getOrderData().size();i++)
+
         {
-            final OutstandingOrderModel.OrderData modell=model.getOrderData().get(i);
+            final OutstandingOrderModel.OrderDetailsData modell=model.getOrderDetailsData();
             View row = getLayoutInflater().inflate(R.layout.my_cart_row, null);
 
             TextView date=(TextView)row.findViewById(R.id.date) ;
@@ -112,11 +105,10 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
             final EditText price=(EditText) row.findViewById(R.id.price) ;
 
             date.setText( modell.getUpdatedOn());
-            productName.setText(modell.getBusinessuserFullname());
-            quantity.setText("0");
+            productName.setText(modell.getName());
+            quantity.setText(modell.getQuantity());
             price.setText(modell.getNetAmount());
             amount+=Double.parseDouble(modell.getNetAmount());
-            //Double priceValue=Double.parseDouble(modell.getPrice())*(modell.getQuantity());
             total_price.setText(modell.getNetAmount()+" £");
 
 
@@ -164,15 +156,19 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
                     pd.cancel();
                 }
                 if(Utils.getStatus(value)==true)
-                {
+                {model=new Gson().fromJson(value,  OutstandingOrderModel.class);
                     switch (apiCall)
                     {
                         case 1:
-                            model=new Gson().fromJson(value, OutstandingOrderModel.class);
-                            if(model.getCode()==200)
-                            {
                                 setValue();
+                            break;
+                        case 2:
+                            if(model.getOrderData().getStatus().equalsIgnoreCase("paid"))
+                            {
+                                Toast.makeText(GetOutstandingOrderDetails.this,"Paymnet status updated sucessfully to shopkeeper",Toast.LENGTH_SHORT).show();
+                              finish();
                             }
+
                             break;
                     }
                 }else{
@@ -234,8 +230,9 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
                          * For sample mobile backend interactions, see
                          * https://github.com/paypal/rest-api-sdk-python/tree/master/samples/mobile_backend
                          */
-                        Toast.makeText(GetOutstandingOrderDetails.this,"PaymentConfirmation info received from PayPal",Toast.LENGTH_SHORT).show();
-                        //updatePaymentDetails(Utils.getPaymentId(confirm.toJSONObject().toString(4)));
+                        String paymentId=Utils.getPaymentId(confirm.toJSONObject().toString(4));
+                        Toast.makeText(GetOutstandingOrderDetails.this,"Payment Confirmation  received from PayPal,Payment ID :"+paymentId,Toast.LENGTH_SHORT).show();
+                        updatePaymentDetails(paymentId);
 
                     } catch (JSONException e) {
                         Log.e(TAG, "an extremely unlikely failure occurred: ", e);
@@ -262,6 +259,15 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
                 }
             }
         });
+    }
+
+    public void updatePaymentDetails(String paymentId)
+    {
+        if(Utils.isNetworkAvailable(GetOutstandingOrderDetails.this))
+        { dailog.show();
+            apiCall=updatePaymentStatus;
+            controller.getApiCall().postDataWithJSon(Common.updatePaymentStatus,controller.getPrefManager().getUserToken(),Common.updatePaymentStatusKeys,new String[]{orderId,paymentId},GetOutstandingOrderDetails.this);
+        }
     }
 
     }

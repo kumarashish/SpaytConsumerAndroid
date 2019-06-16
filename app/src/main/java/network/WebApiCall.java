@@ -470,6 +470,44 @@ public void postFlormData(String url,String key,String userId ,final WebApiRespo
             }
         });
     }
+    public JSONObject getJSON(String [] keys,String[] value)
+    {JSONObject jsonObject=new JSONObject();
+        try{
+            for(int i=0;i<keys.length;i++)
+            {
+                jsonObject.put(keys[i],value[i]);
+            }
+        }catch (Exception ex)
+        {
+            ex.fillInStackTrace();
+        }
+        return jsonObject;
+    }
+    public void postDataWithJSon(String url, String headerToken,String[]Keys,String[] values,final WebApiResponseCallback callback) {
+        client.newBuilder().connectTimeout(60000, TimeUnit.MILLISECONDS).readTimeout(60000, TimeUnit.MILLISECONDS).build();
+        RequestBody reqBody = RequestBody.create(JSON, getJSON(Keys,values).toString());
+        Request request = new Request.Builder().addHeader("X-Consumertoken",headerToken).url(url).post(reqBody).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+                callback.onError(e.fillInStackTrace().toString());
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // cancelProgressDialog(pd);
+                if (response.code() == 200 || response.code() == 201) {
+                    if (response != null) {
+                        callback.onSucess(response.body().string());
+                    } else {
+                        callback.onError(response.message());
+                    }
+                } else {
+                    callback.onError(response.message());
+                }
+            }
+        });
+    }
     public String postData(String url, String json) {
         client.newBuilder().connectTimeout(60000, TimeUnit.MILLISECONDS).readTimeout(60000, TimeUnit.MILLISECONDS).build();
         RequestBody reqBody = RequestBody.create(JSON, json);

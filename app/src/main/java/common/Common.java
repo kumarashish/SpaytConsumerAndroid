@@ -29,12 +29,13 @@ public class Common {
     public static String getQRCode=baseUrlNew+"consumers/get_my_qrcode";
     public static String getOutstandingOrder=baseUrlNew+"order/get_outstanding_consumer_orders";
     public static String getOutstandingOrderDetails=baseUrlNew+"order/get_consumer_order_details";
-
+    public static String updatePaymentStatus=baseUrlNew+"order/update_payment";
     //public static String getInvoices=baseUrl+"get_invoices";
 
     public static String[]afterTimerStartKeys={"IsTimerStarted","IsTimerStoped","IsPaymentDone","business_location_id","start_time","end_time","user_id","amount","parking_carplate_no" ,"timer_id"};
 
     public static String [] updatePaymentKeys={"business_location_id","order_id","transactionid","total_fees","user_id","parking_hours","status","parking_carplate_no"};
+    public static String [] updatePaymentStatusKeys={"id","transactionid"};
 
     public static String userIdKey="user_id";
     public static String idKey="id";
