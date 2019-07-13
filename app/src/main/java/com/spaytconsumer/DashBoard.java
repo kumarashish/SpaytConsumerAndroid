@@ -67,6 +67,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
     @BindView(R.id.dashdoard)
     View content;
     Button logout;
+
     FrameLayout frameLayout;
     private GoogleApiClient mGoogleApiClient;
     private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
@@ -81,6 +82,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
     final int permission = 2;
     private LocationManager mlocManager;
     Spinner rangeSelector;
+
     int []rangeArray={10,20,30,40,50,60,70,80,90,100};
 
     @BindView(R.id.navigation)
@@ -104,6 +106,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
 
         controller = (AppController) getApplicationContext();
        String token=controller.getPrefManager().getUserToken();
+
         frameLayout=(FrameLayout)content.findViewById(R.id.frame) ;
         Thread t=new Thread(new Runnable() {
             @Override

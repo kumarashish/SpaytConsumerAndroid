@@ -83,12 +83,12 @@ android:orientation="vertical"
         </LinearLayout>
 
         <Button
-
+            android:id="@+id/notification"
             android:layout_marginRight="30dp"
             android:layout_marginTop="30dp"
             android:layout_alignParentRight="true"
             android:backgroundTint="@color/white"
-            android:background="@drawable/search"
+            android:background="@drawable/notification"
             android:layout_width="20dp"
             android:layout_height="20dp" />
         <Button

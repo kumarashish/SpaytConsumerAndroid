@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.spaytconsumer.BookKnow;
+import com.spaytconsumer.OrderList;
 import com.spaytconsumer.R;
 
 import org.json.JSONArray;
@@ -56,6 +57,7 @@ import utils.Utils;
 public class Home  extends Fragment implements View.OnClickListener, WebApiResponseCallback,OnMapReadyCallback , BookNowCallBack{
 
     Button logout;
+    Button notification;
     AppController controller;
     TextView city,category;
     Dialog progressDailog;
@@ -90,6 +92,7 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
         controller = (AppController) getActivity().getApplicationContext();
         callBack=this;
         logout=(Button)view.findViewById(R.id.logout);
+        notification=(Button)view.findViewById(R.id.notification);
         city=(TextView) view.findViewById(R.id.location_name);
         location_icon=(ImageView) view.findViewById(R.id.location_icon);
         category=(TextView)view.findViewById(R.id.category);
@@ -115,6 +118,7 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
         location_icon.setOnClickListener(this);
         category.setOnClickListener(this);
         viewSwitchIcon.setOnClickListener(this);
+        notification.setOnClickListener(this);
         back.setOnClickListener(this);
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -313,7 +317,12 @@ public class Home  extends Fragment implements View.OnClickListener, WebApiRespo
 
 
                 break;
+            case R.id.notification:
 
+               getActivity().startActivity(new Intent(getActivity(), OrderList.class));
+
+
+                break;
             case R.id.viewSwitchIcon:
                 if(selectedView==1)
                 {

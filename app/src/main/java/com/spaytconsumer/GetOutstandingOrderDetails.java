@@ -55,8 +55,8 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
     ProgressBar progressBar;
     int getOrderDetails=1,updatePaymentStatus=2;
     Dialog dailog;
-    private static final String CONFIG_CLIENT_ID = Common.paypalClientIdSanbox;
-    private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
+    private static final String CONFIG_CLIENT_ID = Common.paypalClientIdLive;
+    private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_PRODUCTION;
     private static final int REQUEST_CODE_PAYMENT = 1;
     private static PayPalConfiguration config = new PayPalConfiguration()
             .environment(CONFIG_ENVIRONMENT)
@@ -75,17 +75,19 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
         setContentView(R.layout.my_cart);
         controller=(AppController)getApplicationContext();
         ButterKnife.bind(this);
-      orderId=getIntent().getStringExtra("orderId");
+       orderId=getIntent().getStringExtra("orderId");
         //orderId="12";
         back.setOnClickListener(this);
         submit.setOnClickListener(this);
-        if(Utils.isNetworkAvailable(GetOutstandingOrderDetails.this))
-        {
-            dailog=Utils.showPogress(GetOutstandingOrderDetails.this);
-            apiCall=getOrderDetails;
-            controller.getApiCall().postData(Common.getOutstandingOrderDetails,controller.getPrefManager().getUserToken(),new String[]{Common.idKey},new String[]{orderId},GetOutstandingOrderDetails.this);
+        if(orderId.length()>0) {
+            if (Utils.isNetworkAvailable(GetOutstandingOrderDetails.this)) {
+                dailog = Utils.showPogress(GetOutstandingOrderDetails.this);
+                apiCall = getOrderDetails;
+                controller.getApiCall().postData(Common.getOutstandingOrderDetails, controller.getPrefManager().getUserToken(), new String[]{Common.idKey}, new String[]{orderId}, GetOutstandingOrderDetails.this);
+            }
+        }else {
+            Toast.makeText(GetOutstandingOrderDetails.this,"Order Id Missing",Toast.LENGTH_SHORT).show();
         }
-
 
 
     }
@@ -160,12 +162,18 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
                     switch (apiCall)
                     {
                         case 1:
+                            if(Integer.parseInt(model.getCode())==200) {
                                 setValue();
+                            }else{
+                                dailog.cancel();
+                                Toast.makeText(GetOutstandingOrderDetails.this,model.getMsg(),Toast.LENGTH_SHORT).show();
+
+                            }
                             break;
                         case 2:
                             if(model.getOrderData().getStatus().equalsIgnoreCase("paid"))
                             {
-                                Toast.makeText(GetOutstandingOrderDetails.this,"Paymnet status updated sucessfully to shopkeeper",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GetOutstandingOrderDetails.this,"Payment status updated sucessfully to shopkeeper",Toast.LENGTH_SHORT).show();
                               finish();
                             }
 
