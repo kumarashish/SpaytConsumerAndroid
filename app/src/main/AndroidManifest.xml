@@ -21,7 +21,7 @@
             android:value="@integer/google_play_services_version"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyARyIWs_8t0_hIrTPGqMsOPboaEa5T25Qs"/>
+            android:value="AIzaSyA7_w46xTHfSWX2pXrN2lscwfziUAFMAJ8"/>
         <activity android:name="prelogin.Splash"
             android:screenOrientation="portrait">
             <intent-filter>

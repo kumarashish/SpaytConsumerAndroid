@@ -199,8 +199,8 @@ if(Apicall==bookNow)
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                perHourCharge.setText(" € " + model.getParking_fees().getParking_fee_per_hour());
-                maximumParkingAmount.setText(" € " + model.getParking_fees().getMaximum_parking_fees());
+                perHourCharge.setText(  model.getParking_fees().getParking_fee_per_hour()+" € ");
+                maximumParkingAmount.setText( model.getParking_fees().getMaximum_parking_fees()+" € " );
                 minHour.setText(model.getParking_fees().getMinimum_parking_hours());
                 for (int i = 0; i < 7; i++) {
                     View view = getLayoutInflater().inflate(R.layout.parking_hours, null, false);

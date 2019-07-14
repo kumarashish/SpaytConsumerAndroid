@@ -37,12 +37,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONObject;
 
@@ -83,69 +86,69 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
     private LocationManager mlocManager;
     Spinner rangeSelector;
 
-    int []rangeArray={10,20,30,40,50,60,70,80,90,100};
+    int[] rangeArray = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
     @BindView(R.id.navigation)
     android.support.design.widget.BottomNavigationView bottomView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
         ButterKnife.bind(this);
 
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) &&(Build.VERSION.SDK_INT <26)) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) && (Build.VERSION.SDK_INT < 26)) {
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        }else if(Build.VERSION.SDK_INT >=26){
+        } else if (Build.VERSION.SDK_INT >= 26) {
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)bottomView.getLayoutParams();
-            params.bottomMargin=120;
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) bottomView.getLayoutParams();
+            params.bottomMargin = 120;
         }
 
         controller = (AppController) getApplicationContext();
-       String token=controller.getPrefManager().getUserToken();
+        String token = controller.getPrefManager().getUserToken();
 
-        frameLayout=(FrameLayout)content.findViewById(R.id.frame) ;
-        Thread t=new Thread(new Runnable() {
+        frameLayout = (FrameLayout) content.findViewById(R.id.frame);
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                if(Utils.isNetworkAvailable(DashBoard.this))
-                {
-            final String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,controller.getProfile().getUser_id());
-              //  final String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,"68");
-                    final boolean[] status=Utils.isTimerStarted(response);
+                if (Utils.isNetworkAvailable(DashBoard.this)) {
+                    final String response = controller.getApiCall().postFlormData(Common.isTimerStartedUrl, controller.getProfile().getUser_id());
+                    //  final String response= controller.getApiCall().postFlormData(Common.isTimerStartedUrl,"68");
+                    final boolean[] status = Utils.isTimerStarted(response);
 
-                if(status.length>0) {
-                    if (status[0] == true) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (status[1] == true) {
-                                    if (status[2] == false) {
-                                        Intent in = new Intent(DashBoard.this,PaymentPage.class);
-                                        PaymentPage.locationDetails = new LocationDetails(Utils.getLocationDetails(response));
-                                        PaymentPage.timers = new UserTimers(Utils.getTimers(response));
-                                        in.putExtra("pendingamount", Utils.getTotalParkingAmount(response));
+                    if (status.length > 0) {
+                        if (status[0] == true) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (status[1] == true) {
+                                        if (status[2] == false) {
+                                            Intent in = new Intent(DashBoard.this, PaymentPage.class);
+                                            PaymentPage.locationDetails = new LocationDetails(Utils.getLocationDetails(response));
+                                            PaymentPage.timers = new UserTimers(Utils.getTimers(response));
+                                            in.putExtra("pendingamount", Utils.getTotalParkingAmount(response));
+                                            startActivity(in);
+                                            finish();
+                                            /////navigate to payment page
+
+                                        }
+                                    } else {
+                                        /////navigate to payment page running timer
+                                        Intent in = new Intent(DashBoard.this, TimerClass.class);
+                                        TimerClass.timers = new UserTimers(Utils.getTimers(response));
                                         startActivity(in);
-                                        finish();
-                                        /////navigate to payment page
-
                                     }
-                                } else {
-                                    /////navigate to payment page running timer
-                                    Intent in = new Intent(DashBoard.this, TimerClass.class);
-                                    TimerClass.timers = new UserTimers(Utils.getTimers(response));
-                                    startActivity(in);
                                 }
-                            }
 
-                        });
+                            });
 
+                        }
                     }
-                }
-                Log.d("response",response);
+                    Log.d("response", response);
                 }
 
             }
@@ -158,9 +161,9 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
             final ViewGroup.LayoutParams layoutParams = iconView.getLayoutParams();
             final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
             // set your height here
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, displayMetrics);
-                // set your width here
-                layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, displayMetrics);
+            layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, displayMetrics);
+            // set your width here
+            layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, displayMetrics);
             iconView.setLayoutParams(layoutParams);
         }
         loadfragment(1);
@@ -172,13 +175,45 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
                 .addConnectionCallbacks(this)
                 .build();
         createLocationRequest();
-        mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             fetchCurrentLocation();
         } else {
             showGpsDisabledAlert();
         }
+
+
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Task task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location!=null) {
+                    //Write your implemenation here
+                    Log.d("AndroidClarified",location.getLatitude()+" "+location.getLongitude());
+                    String address = utils.Utils.getCompleteAddressString(DashBoard.this, location.getLatitude(), location.getLongitude());
+                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                    controller.setAddress(address, loc);
+                    controller.setAroundME(loc);
+                 //   stopLocationUpdates();
+                    updateScreen();
+                    if( progressDialog!=null) {
+                        progressDialog.cancel();
+                    }
+                }
+            }
+        });
     }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
@@ -222,15 +257,15 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-            String address = utils.Utils.getCompleteAddressString(DashBoard.this, location.getLatitude(), location.getLongitude());
-            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-            controller.setAddress(address, loc);
-            controller.setAroundME(loc);
-            stopLocationUpdates();
-            updateScreen();
-            if( progressDialog!=null) {
-                progressDialog.cancel();
-            }
+//            String address = utils.Utils.getCompleteAddressString(DashBoard.this, location.getLatitude(), location.getLongitude());
+//            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+//            controller.setAddress(address, loc);
+//            controller.setAroundME(loc);
+//            stopLocationUpdates();
+//            updateScreen();
+//            if( progressDialog!=null) {
+//                progressDialog.cancel();
+//            }
 
 
 

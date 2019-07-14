@@ -97,34 +97,34 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
        double amount=0.00;
 
         {
-            final OutstandingOrderModel.OrderDetailsData modell=model.getOrderDetailsData();
-            View row = getLayoutInflater().inflate(R.layout.my_cart_row, null);
+            if (model.getOrderDetailsData().size() > 0) {
+                for (int i = 0; i < model.getOrderDetailsData().size(); i++) {
+                    OutstandingOrderModel.OrderDetailsData modell = model.getOrderDetailsData().get(i);
+                    View row = getLayoutInflater().inflate(R.layout.my_cart_row, null);
+                    TextView date = (TextView) row.findViewById(R.id.date);
+                    TextView productName = (TextView) row.findViewById(R.id.productName);
+                    final TextView total_price = (TextView) row.findViewById(R.id.total_price);
+                    final EditText quantity = (EditText) row.findViewById(R.id.quantity);
+                    final EditText price = (EditText) row.findViewById(R.id.price);
+                    date.setText(modell.getUpdatedOn());
+                    productName.setText(modell.getName());
+                    quantity.setText(modell.getQuantity());
+                    price.setText(modell.getNetAmount());
+                    amount += Double.parseDouble(modell.getNetAmount());
+                    total_price.setText(modell.getNetAmount() + " €");
+                    price.setEnabled(false);
+                    total_price.setFocusable(false);
+                    price.setFocusable(false);
+                    total_price.setEnabled(false);
 
-            TextView date=(TextView)row.findViewById(R.id.date) ;
-            TextView productName=(TextView)row.findViewById(R.id.productName) ;
-            final TextView total_price=(TextView)row.findViewById(R.id.total_price);
-            final EditText quantity=(EditText) row.findViewById(R.id.quantity) ;
-            final EditText price=(EditText) row.findViewById(R.id.price) ;
-
-            date.setText( modell.getUpdatedOn());
-            productName.setText(modell.getName());
-            quantity.setText(modell.getQuantity());
-            price.setText(modell.getNetAmount());
-            amount+=Double.parseDouble(modell.getNetAmount());
-            total_price.setText(modell.getNetAmount()+" £");
-
-
-         price.setEnabled(false);
-           total_price.setFocusable(false);
-            price.setFocusable(false);
-            total_price.setEnabled(false);
-
-            content.addView(row);
-        }
-        totalPayableAmout=Double.toString(amount);
-        grandTotal.setText(Double.toString( amount)+" £");
+                    content.addView(row);
+                }
+            }
+        totalPayableAmout=model.getOrderData().getGrossAmount() ;
+        grandTotal.setText(model.getOrderData().getNetAmount()+" €");
         if(dailog!=null)
         {dailog.cancel();}
+    }
     }
 
     @Override
@@ -181,6 +181,7 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
                     }
                 }else{
                     Utils.showToast(GetOutstandingOrderDetails.this,Utils.getMessage(value));
+                    cancelDialog();
                 }
             }
         });
@@ -269,6 +270,19 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
         });
     }
 
+    public void cancelDialog()
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                if(pd!=null)
+                {
+                    pd.cancel();
+                }
+            }
+        });
+    }
     public void updatePaymentDetails(String paymentId)
     {
         if(Utils.isNetworkAvailable(GetOutstandingOrderDetails.this))

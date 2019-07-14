@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -31,6 +32,9 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.spaytconsumer.DashBoard;
 import com.spaytconsumer.R;
 
 import adapter.PlaceArrayAdapter;
@@ -183,7 +187,25 @@ public class LocationSearch extends FragmentActivity implements View.OnClickList
                 }
                 pb.setVisibility(View.VISIBLE);
                 pb.bringToFront();
-                PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, LocationSearch.this);
+                FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+                Task task = fusedLocationProviderClient.getLastLocation();
+                task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if(location!=null) {
+                            //Write your implemenation here
+                            String address = Utils.getCompleteAddressString(LocationSearch.this, location.getLatitude(), location.getLongitude());
+                            //mAutocompleteTextView.setText(address);
+                            LatLng loc=new LatLng(location.getLatitude(),location.getLongitude());
+                            controller.setAddress(address, loc);
+                            pb.setVisibility(View.GONE);
+                            Intent in = new Intent();
+                            setResult(RESULT_OK, in);
+                            finish();
+                        }
+                    }
+                });
+               // PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, LocationSearch.this);
                 Log.d(TAG, "Location update started ..............: ");
                 break;
         }

@@ -20,11 +20,12 @@ public class OrderAdapter extends BaseAdapter {
     ButtonClickListner listner;
     Activity act;
     LayoutInflater inflater;
-    ArrayList<OrderModel.OrderItems> list;
+    List<OrderModel.OrderItems> list;
     public OrderAdapter(Activity act, List<OrderModel.OrderItems> list){
         this.act=act;
-        this.list.addAll(list);
+        this.list=list;
         listner=(ButtonClickListner)act;
+        inflater = LayoutInflater.from(act);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class OrderAdapter extends BaseAdapter {
         }
         holder.orderId.setText("Order Id : "+model.getId());
         holder.date.setText("Date : "+model.getUpdatedOn());
-        holder.amount.setText("Amount : "+model.getNetAmount());
+        holder.amount.setText("Amount : "+model.getNetAmount()+" €");
         holder.status.setText("Status : "+model.getStatus());
         holder.details.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -91,8 +91,16 @@ public class ParkingModel {
             JSONArray locationDetails = jsonObject.getJSONArray("Location Details");
             JSONArray openingHourArray = jsonObject.getJSONArray("Opening Hours");
             JSONArray parkingArray = jsonObject.getJSONArray("Parking Fees");
-            parking_fees = new Parking_Fees(parkingArray.getJSONObject(0));
-            opening_hours = new Opening_Hours(openingHourArray.getJSONObject(0));
+            if(parking_fees!=null) {
+                parking_fees = new Parking_Fees(parkingArray.getJSONObject(0));
+            }else{
+                parking_fees = new Parking_Fees();
+            }
+            if(opening_hours!=null) {
+                opening_hours = new Opening_Hours(openingHourArray.getJSONObject(0));
+            }else{
+opening_hours=new Opening_Hours();
+            }
             setBusinessLocationId(locationDetails.getJSONObject(0));
         } catch (Exception ex) {
             ex.fillInStackTrace();
@@ -110,22 +118,22 @@ public class ParkingModel {
 
     public class Opening_Hours{
 
-        String  monday_mode;
-        String tuesday_mode;
-        String wednesday_mode;
-        String thursday_mode;
-        String friday_mode;
-        String saturday_mode;
-        String sunday_mode;
+        String  monday_mode="N/A";
+        String tuesday_mode="N/A";
+        String wednesday_mode="N/A";
+        String thursday_mode="N/A";
+        String friday_mode="N/A";
+        String saturday_mode="N/A";
+        String sunday_mode="N/A";
 
-        String mondayTimming;
-        String tuesdayTimming;
-        String wednesdayTimming;
-        String thursdayTimming;
-        String fridayTimming;
-        String saturdayTimming;
-        String sundayTimming;
-
+        String mondayTimming="00:00";
+        String tuesdayTimming="00:00";
+        String wednesdayTimming="00:00";
+        String thursdayTimming="00:00";
+        String fridayTimming="00:00";
+        String saturdayTimming="00:00";
+        String sundayTimming="00:00";
+public Opening_Hours(){}
         public Opening_Hours(JSONObject jsonObject) {
             try {
                 monday_mode = jsonObject.isNull("monday_mode") ? "" : jsonObject.getString("monday_mode");
@@ -197,9 +205,10 @@ public class ParkingModel {
         }
     }
     public class Parking_Fees{
-        String minimum_parking_hours;
-                String maximum_parking_fees;
-                        String parking_fee_per_hour;
+        String minimum_parking_hours="0";
+                String maximum_parking_fees="0";
+                        String parking_fee_per_hour="0";
+                        public Parking_Fees(){}
         public  Parking_Fees(JSONObject jsonObject)
         {
            try{
