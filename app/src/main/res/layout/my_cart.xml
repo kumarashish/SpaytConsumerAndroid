@@ -221,7 +221,7 @@ android:layout_centerVertical="true"
 
                 android:textSize="18dp"
                 android:textColor="@color/white"
-                android:text="Zahlen Sie wissen"
+                android:text="Jetzt bezahlen"
                 android:layout_alignParentBottom="true"
                 android:background="@color/skyblue"
                 android:layout_width="match_parent"
