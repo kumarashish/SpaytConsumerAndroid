@@ -8,7 +8,7 @@ package common;
    public static String baseUrl = "https://api.spayt.de/user/";
    public static String baseUrlNew = "https://api.spayt.de/";
    public static String register = baseUrl + "register?";
-   public static String registerWithFb = baseUrl + "facebook_register";
+   public static String registerWithFb = baseUrlNew + "consumers/login_with_facebook";
    //public static String loginwithFb=baseUrl+"user/facebook_login";
    public static String login = baseUrlNew + "consumers/login";
    public static String forgetPassword = baseUrl + "forgot_password";

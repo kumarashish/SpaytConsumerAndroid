@@ -92,10 +92,10 @@ String token;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         ButterKnife.bind(this);
-        if( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)&&(Build.VERSION.SDK_INT <26) ){
+        if( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)&&(Build.VERSION.SDK_INT <24) ){
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }else if(Build.VERSION.SDK_INT >=26){
+        }else if(Build.VERSION.SDK_INT >=24){
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)btn_login.getLayoutParams();
@@ -134,7 +134,7 @@ String token;
                                             String email = response.getJSONObject().getString("email");
                                             apiCall = loginWithFb;
                                             dialog = utils.Utils.showPogress(Login.this);
-                                            controller.getApiCall().loginWithFb(Common.registerWithFb, id, email, name, utils.Utils.getDeviceID(Login.this), loginResult.getAccessToken().getToken(), Login.this);
+                                            controller.getApiCall().loginWithFb(Common.registerWithFb, id, email, name,controller.getPrefManager().getFcmToken(), loginResult.getAccessToken().getToken(), Login.this);
                                             LoginManager.getInstance().logOut();
                                         } catch (Exception e) {
                                             e.printStackTrace();

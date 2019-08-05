@@ -101,17 +101,17 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
                 for (int i = 0; i < model.getOrderDetailsData().size(); i++) {
                     OutstandingOrderModel.OrderDetailsData modell = model.getOrderDetailsData().get(i);
                     View row = getLayoutInflater().inflate(R.layout.my_cart_row, null);
-                    TextView date = (TextView) row.findViewById(R.id.date);
+
                     TextView productName = (TextView) row.findViewById(R.id.productName);
                     final TextView total_price = (TextView) row.findViewById(R.id.total_price);
                     final EditText quantity = (EditText) row.findViewById(R.id.quantity);
                     final EditText price = (EditText) row.findViewById(R.id.price);
-                    date.setText(modell.getUpdatedOn());
+
                     productName.setText(modell.getName());
-                    quantity.setText(modell.getQuantity());
-                    price.setText(modell.getNetAmount());
+                    quantity.setText(Utils.getFormattedAmount(modell.getQuantity()));
+                    price.setText(Utils.getFormattedAmount(modell.getNetAmount()));
                     amount += Double.parseDouble(modell.getNetAmount());
-                    total_price.setText(modell.getNetAmount() + " €");
+                    total_price.setText(Utils.getFormattedAmount(modell.getNetAmount()) + " €");
                     price.setEnabled(false);
                     total_price.setFocusable(false);
                     price.setFocusable(false);
@@ -121,7 +121,7 @@ public class GetOutstandingOrderDetails extends Activity implements View.OnClick
                 }
             }
         totalPayableAmout=model.getOrderData().getGrossAmount() ;
-        grandTotal.setText(model.getOrderData().getNetAmount()+" €");
+        grandTotal.setText(Utils.getFormattedAmount(model.getOrderData().getNetAmount())+" €");
         if(dailog!=null)
         {dailog.cancel();}
     }

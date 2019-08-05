@@ -302,4 +302,35 @@ public static String getPaymentId(String value)
     }
     return "";
 }
+    public static String getFormattedAmount(String amount) {
+        String formatedValue;
+        try{
+            if(amount.contains(","))
+            {
+                amount=amount.replaceAll(",","");
+            }
+            if(amount.contains(".")) {
+                String[] value = amount.split("\\.");
+                if (value[1].length() > 2) {
+                    formatedValue=String.format("%,.3f", Double.parseDouble(amount));
+
+                }else{
+                    formatedValue= String.format("%,.2f", Double.parseDouble(amount));
+                }
+
+            }else{
+                formatedValue= String.format("%,.2f", Double.parseDouble(amount));
+            }
+            if(formatedValue.contains(","))
+            {
+                formatedValue=formatedValue.replaceAll(",","");
+            }
+            return formatedValue;
+        } catch (Exception ex)
+        {
+            ex.fillInStackTrace();
+        }
+
+        return "";
+    }
 }

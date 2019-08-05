@@ -41,17 +41,7 @@
             android:text=""
             android:layout_width="0dp"
             android:layout_height="match_parent" />
-        <TextView
-            android:id="@+id/date"
-            android:textSize="10dp"
 
-            android:paddingLeft="10dp"
-            android:textColor="@color/grey"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text=""
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
         <EditText
             android:inputType="numberDecimal"
             android:layout_marginLeft="5dp"
@@ -73,7 +63,7 @@
 
             android:paddingLeft="10dp"
             android:textColor="@color/grey"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center"
             android:text=""
             android:layout_width="0dp"
