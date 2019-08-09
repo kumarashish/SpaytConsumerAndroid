@@ -162,30 +162,7 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
         }
 
     }
-public void setQRCode(String inputValue)
-{
-//    WindowManager manager = (WindowManager)getActivity(). getSystemService(WINDOW_SERVICE);
-//    Display display = manager.getDefaultDisplay();
-//    Point point = new Point();
-//    display.getSize(point);
-//    int width = point.x;
-//    int height = point.y;
-//    int smallerDimension = width < height ? width : height;
-//    smallerDimension = smallerDimension * 3 / 4;
-//
-//    qrgEncoder = new QRGEncoder(
-//            inputValue, null,
-//            QRGContents.Type.TEXT,
-//            smallerDimension);
-//    try {
-//        bitmap = qrgEncoder.encodeAsBitmap();
-//        qrCode.setImageBitmap(bitmap);
-//    } catch (WriterException e) {
-//        Log.v("TAG", e.toString());
-//    }
 
-    Picasso.with(getActivity()).load("https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=thisisashish").placeholder( R.drawable.progress_drawable ).error(android.R.drawable.stat_notify_error).into(qrCode);
-}
     public void setMonthsIngerman()
     {
         jan.setText("Januar");
