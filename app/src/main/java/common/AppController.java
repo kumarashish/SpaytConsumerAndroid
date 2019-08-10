@@ -1,6 +1,7 @@
 package common;
 
 import android.app.Application;
+import android.os.StrictMode;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -22,7 +23,8 @@ public class AppController extends Application {
     LatLng currentLocation,aroundMe;
     @Override
     public void onCreate() {
-
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         apiCall=new WebApiCall(this);
 
         prefManager=new PrefManager(this);

@@ -247,7 +247,7 @@ public class WebApiCall {
         });
     }
 
-    public void getInvoices(String url, String user_id, String month,String year, final WebApiResponseCallback callback) {
+    public void getInvoices(String url, String headerToken, String month,String year, final WebApiResponseCallback callback) {
 
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
@@ -255,11 +255,12 @@ public class WebApiCall {
         RequestBody formBody = null;
 
         formBody = new FormBody.Builder()
-                .add("user_id", user_id)
+
                 .add("month", month)
                 .add("year", year)
                 .build();
-        Request request = new Request.Builder().url(url).post(formBody).build();
+        Request request = new Request.Builder().header("X-Consumertoken",headerToken).url(url).post(formBody).build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -351,6 +352,7 @@ public void postFlormData(String url,String key,String userId ,final WebApiRespo
             }
         });
     }
+
     public void postData(String url,String header,String []key,String[] values ,final WebApiResponseCallback callback)
     {
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)

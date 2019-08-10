@@ -1,18 +1,22 @@
 package fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.Point;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,37 +25,34 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
+import android.widget.Toast;
 
-import com.google.zxing.WriterException;
+import com.google.gson.Gson;
 import com.spaytconsumer.R;
 import com.squareup.picasso.Picasso;
 
-import net.glxn.qrgen.core.image.ImageType;
-import net.glxn.qrgen.javase.QRCode;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 
 import adapter.Invoices_ListAdapter;
-import androidmads.library.qrgenearator.QRGContents;
-import androidmads.library.qrgenearator.QRGEncoder;
 import common.AppController;
 import common.Common;
+import common.FileDownloader;
+import intefaces.InvoiceButtonClickListner;
 import intefaces.WebApiResponseCallback;
-import models.OrderDetailsModel;
+import models.OrderInvoiceModel;
 import models.UserProfile;
 import utils.Utils;
 
-import static android.content.Context.WINDOW_SERVICE;
+import static android.support.constraint.Constraints.TAG;
 
 /**
  * Created by ashish.kumar on 30-10-2018.
  */
-public class Account extends Fragment implements View.OnClickListener , WebApiResponseCallback{
+public class Account extends Fragment implements View.OnClickListener , WebApiResponseCallback, InvoiceButtonClickListner {
     LinearLayout view1;
     LinearLayout view2;
     LinearLayout view3;
@@ -65,17 +66,19 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
     AppController controller;
     Dialog dialog;
     int apiCall=0;
-    int updateProfile=1,getInvoice=2,getQRCode=3;
+    int updateProfile=1,getInvoice=2,getQRCode=3,downloadInvoice=5,emailInvoice=4;
     int currentYear=2018;
-    ArrayList<OrderDetailsModel>orderList=new ArrayList<>();
+
     ImageView qrCode;
    // View profile;
+   InvoiceButtonClickListner callback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.accounts, container, false);
         controller=(AppController)getActivity().getApplicationContext();
+        callback=this;
         personalInfo=(View)view.findViewById(R.id.personalInfo);
         //profile=(View)view.findViewById(R.id.profile);
         ruchnungen=(View)view.findViewById(R.id.ruchnungen);
@@ -197,7 +200,7 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
         if (Utils.isNetworkAvailable(getActivity())) {
             apiCall=getInvoice;
             dialog = Utils.showPogress(getActivity());
-             controller.getApiCall().getInvoices(Common.getInvoices, controller.getProfile().getUser_id(), Integer.toString(currentMonth), Integer.toString(currentYear), Account.this);
+             controller.getApiCall().getInvoices(Common.getInvoices, controller.getPrefManager().getUserToken(), Integer.toString(currentMonth), Integer.toString(currentYear), Account.this);
             //controller.getApiCall().getInvoices(Common.getInvoices,"81", Integer.toString(currentMonth), Integer.toString(currentYear), Account.this);
         }
     }
@@ -471,70 +474,87 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
 
     @Override
     public void onSucess(final String value) {
-
-            switch (apiCall) {
-                case 1:
-                    if(   utils.Utils.getStatus(value)) {
-                        UserProfile profile = controller.getProfile();
-                        profile.setFirst_name(fname.getText().toString());
-                        profile.setLast_name(lname.getText().toString());
-                        controller.setProfile(profile);
-                    }else {
-                        utils.Utils.showToast(getActivity(), utils.Utils.getMessage(value));
-                    }
-                break;
-                case 2:
-                    orderList.clear();
-                    if(!value.contains("False"))
-                    {
-                        try {
-                            JSONObject jsonObject = new JSONObject(value);
-                            JSONArray jsonArray = jsonObject.getJSONArray("Order Details");
-                            for(int i=0;i<jsonArray.length();i++)
-                            {
-                                orderList.add(new OrderDetailsModel(jsonArray.getJSONObject(i)));
-                            }
-                        }catch (Exception ex)
-                        {
-                            ex.fillInStackTrace();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch (apiCall) {
+                    case 1:
+                        if (utils.Utils.getStatus(value)) {
+                            UserProfile profile = controller.getProfile();
+                            profile.setFirst_name(fname.getText().toString());
+                            profile.setLast_name(lname.getText().toString());
+                            controller.setProfile(profile);
+                        } else {
+                            utils.Utils.showToast(getActivity(), utils.Utils.getMessage(value));
                         }
-                    }
-                    if(orderList.size()>0)
-                    {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                invoices_list.setAdapter(new Invoices_ListAdapter(orderList,getActivity()));
-                                invoices_list.setVisibility(View.VISIBLE);
-                            }
-                        });
-                    }else{
-                        invoices_list.setVisibility(View.GONE);
-                        Utils.showToast(getActivity(),"No record found");
-                    }
-                    break;
-                case 3:
-                    if(   utils.Utils.getStatus(value)) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                String qrUrl=Utils.getQRUrl(value);
-                                if(qrUrl.length()>0) {
-                                    Picasso.with(getActivity()).load(qrUrl).placeholder( R.drawable.progress_drawable ).error(android.R.drawable.stat_notify_error).into(qrCode);
+                        break;
+                    case 2:
+                        if (!value.contains("False")) {
+                            try {
+                                final OrderInvoiceModel model = new Gson().fromJson(value, OrderInvoiceModel.class);
+                                if (model.getOrderData().size() > 0) {
+
+                                    invoices_list.setAdapter(new Invoices_ListAdapter(getActivity(), model.getOrderData(), callback));
+                                    invoices_list.setVisibility(View.VISIBLE);
+                                } else {
+                                    invoices_list.setVisibility(View.GONE);
+                                    Utils.showToast(getActivity(), "No record found");
                                 }
+                            } catch (Exception ex) {
+                                ex.fillInStackTrace();
+                                invoices_list.setVisibility(View.GONE);
+                                Utils.showToast(getActivity(), ex.fillInStackTrace().toString());
                             }
-                        });
-                    }else {
-                        utils.Utils.showToast(getActivity(), utils.Utils.getMessage(value));
-                    }
-                    break;
+                        } else {
+                            invoices_list.setVisibility(View.GONE);
+                            Utils.showToast(getActivity(), "No record found");
+                        }
+
+                        break;
+                    case 3:
+                        if (utils.Utils.getStatus(value)) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String qrUrl = Utils.getQRUrl(value);
+                                    if (qrUrl.length() > 0) {
+                                        Picasso.with(getActivity()).load(qrUrl).placeholder(R.drawable.progress_drawable).error(android.R.drawable.stat_notify_error).into(qrCode);
+                                    }
+                                }
+                            });
+                        } else {
+                            utils.Utils.showToast(getActivity(), utils.Utils.getMessage(value));
+                        }
+                        break;
+
+                    case 4:
+                        if (dialog != null) {
+                            dialog.cancel();
+                        }
+                        if (Utils.getStatus(value)) {
+                            Utils.showToast(getActivity(), "Email has been send to registered Email Id.");
+                        } else {
+                            Utils.showToast(getActivity(), Utils.getMessage(value));
+                        }
+                        break;
+                    case 5:
+                        if (dialog != null) {
+                            dialog.cancel();
+                        }
+                        if (Utils.getStatus(value)) {
+                            String pdfPath = Utils.getString(value, "pdf_path");
+                            dialog.show();
+                            new DownloadFile().execute(pdfPath, Utils.getFileName(controller.getProfile().getFirst_name()));
+                        } else {
+                            Utils.showToast(getActivity(), Utils.getMessage(value));
+                        }
+                        break;
+                }
+                if (dialog != null) {
+                    dialog.cancel();
+                }
             }
-
-
-        if(dialog!=null)
-        {
-            dialog.cancel();
-        }
+        });
     }
 
     @Override
@@ -545,4 +565,114 @@ public class Account extends Fragment implements View.OnClickListener , WebApiRe
             dialog.cancel();
         }
     }
+
+    @Override
+    public void onEmailClick(final String orderId) {
+getActivity().runOnUiThread(new Runnable() {
+    @Override
+    public void run() {
+   emailInvoice(orderId);
+    }
+});
+    }
+
+    @Override
+    public void onDownloadClick(final String orderId) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                handleDownload(orderId);
+            }
+        });
+    }
+
+    public void emailInvoice(String orderId) {
+        apiCall = emailInvoice;
+        dialog = Utils.showBluePogress(getActivity());
+        controller.getApiCall().postData(Common.sendOrderPdfEmail, controller.getPrefManager().getUserToken(), Common.id, new String[]{orderId}, this);
+
+    }
+
+    public void handleDownload(String orderId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                downloadInvoice(orderId);
+                //File write logic here
+
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 22);
+            }
+        } else {
+            downloadInvoice(orderId);
+        }
+    }
+    public void downloadInvoice(String orderId) {
+
+        apiCall = downloadInvoice;
+        dialog = Utils.showBluePogress(getActivity());
+        controller.getApiCall().postData(Common.downloadOrderPdfInvoice, controller.getPrefManager().getUserToken(), Common.id, new String[]{orderId}, this);
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+           Utils.showToast(getActivity(),"Permission granted");
+        }
+    }
+    private class DownloadFile extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String fileUrl = strings[0];   // -> http://maven.apache.org/maven-1.x/maven.pdf
+            String fileName = strings[1];  // -> maven.pdf
+            String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+            File folder = new File(extStorageDirectory, "SpaytBusinessInvoices");
+            folder.mkdir();
+
+            File pdfFile = new File(folder, fileName);
+
+            try {
+                pdfFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return FileDownloader.downloadFile(fileUrl, pdfFile, getActivity());
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s.length() > 0) {
+                openPdf(s);
+            }
+           dialog.cancel();
+        }
+    }
+
+    public void openPdf(String fileName) {
+        File pdfFile = new File(Environment.getExternalStorageDirectory() + "/SpaytBusinessInvoices/" + fileName);  // -> filename = maven.pdf
+        if (pdfFile .exists()) {
+
+            Uri path = Uri.fromFile(pdfFile);
+            Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+            pdfIntent.setDataAndType(path, "application/pdf");
+            pdfIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            try {
+                startActivity(pdfIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(), "No Application available to view PDF", Toast.LENGTH_SHORT).show();
+            }catch (Exception ex)
+            {
+                ex.fillInStackTrace();
+            }
+        }else{
+            Toast.makeText(getActivity(), "File Doesnot Exists.", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
+

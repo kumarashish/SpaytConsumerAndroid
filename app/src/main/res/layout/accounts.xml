@@ -617,6 +617,7 @@
         </HorizontalScrollView>
         <ListView
             android:visibility="gone"
+            android:divider="@null"
             android:id="@+id/invoices_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

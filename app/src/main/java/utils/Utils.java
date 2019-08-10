@@ -333,4 +333,27 @@ public static String getPaymentId(String value)
 
         return "";
     }
+    public static String getString(String data,String key) {
+        String value = "";
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            value =jsonObject.isNull(key)?"": jsonObject.getString( key);
+        } catch (Exception ex) {
+            ex.fillInStackTrace();
+        }
+        if(value.contains("//"))
+        {
+            value=value.replaceAll("//","/");
+        }
+        if(value.contains("https:/"))
+        {
+            value=value.replaceAll("https:/","https://");
+        }
+        return value;
+    }
+
+    public static String getFileName(String loggedInCustomer)
+    {
+        return "Invoice_"+loggedInCustomer+"_"+Long.toString(System.currentTimeMillis())+".pdf";
+    }
 }
